@@ -1,0 +1,6 @@
+tqdm
+pandas
+scipy
+matplotlib
+numpy
+networkx
