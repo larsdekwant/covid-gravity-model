@@ -33,13 +33,13 @@ class ModelM(object):
         ''' Variables '''
         self.SaveName = params_input['savename']
         self.Path_RawDataDay = config['PATHS']['RAWDATA_DAY']
-        self.Path_RawDataGem = config['PATHS']['RAWDATA_GEM']
+        self.Path_RawDataGem = config['PATHS']['RAWDATA_GEM_INW']
         self.Path_DemoMat = config['PATHS']['RAWDATA_DEMO']
         self.Path_Data = config['PATHS']['DATA']
         self.Path_Datasave = config['PATHS']['FIG']
         self.Path_RawDataMix = config['PATHS']['RAWDATA_MIX']
         self.Path_RawDataMix2 = config['PATHS']['RAWDATA_MIX2']
-        self.Div = np.float(params_input['division'])
+        self.Div = float(params_input['division'])
         self.Ndays = int(config['PARAMS']['NDAYS'])
 
         print('# ---------------------------------------------------------- #')
