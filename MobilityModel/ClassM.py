@@ -54,7 +54,7 @@ class ModelM(object):
         ''' Get main municipality list (for version control): 2018 '''
         self.DF_Gem = pd.read_csv(self.Path_RawDataGem, delimiter=';', encoding='latin-1')
         self.UniLocs = np.unique(self.DF_Gem.Gemeentenaam)
-        self.UniIDs = [list(self.DF_Gem.GemeentecodeGM[self.DF_Gem.Gemeentenaam == i])[0] for i in self.UniLocs]
+        self.UniIDs = [list(self.DF_Gem.Gemeentecode[self.DF_Gem.Gemeentenaam == i])[0] for i in self.UniLocs]
 
         ''' Mezuro data '''
         self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
