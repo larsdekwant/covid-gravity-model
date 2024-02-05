@@ -32,7 +32,9 @@ class ModelM(object):
 
         ''' Variables '''
         self.SaveName = params_input['savename']
-        self.Path_RawDataDay = config['PATHS']['RAWDATA_DAY']
+        #self.Path_RawDataDay = config['PATHS']['RAWDATA_DAY']
+        self.Path_RawDataDayFreq = config['PATHS']['RAWDATA_DAY_FREQ']
+        self.Path_RawDataDayInc = config['PATHS']['RAWDATA_DAY_INC']
         self.Path_RawDataGem = config['PATHS']['RAWDATA_GEM_TOTAL']
         self.Path_DemoMat = config['PATHS']['RAWDATA_DEMO']
         self.Path_Data = config['PATHS']['DATA']
@@ -57,7 +59,11 @@ class ModelM(object):
         self.UniIDs = [list(self.DF_Gem.Gemeentecode[self.DF_Gem.Gemeentenaam == i])[0] for i in self.UniLocs]
 
         ''' Mezuro data '''
-        self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
+        #self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
+
+        ''' Synthetic mobility data '''
+        self.MobMat_freq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
+        self.MobMat_inc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
 
         ''' Demographic data (home pop) '''
         DF_Demo = pd.read_csv(self.Path_DemoMat, delimiter=',')
