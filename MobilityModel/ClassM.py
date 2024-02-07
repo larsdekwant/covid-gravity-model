@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 from scipy.sparse import csr_matrix
 import warnings
+import os
 from Functions import draw_fractions, translate_polymod, new_mixmat
 warnings.filterwarnings("ignore")
 
@@ -39,8 +40,8 @@ class ModelM(object):
         self.Path_DemoMat = config['PATHS']['RAWDATA_DEMO']
         self.Path_Data = config['PATHS']['DATA']
         self.Path_Datasave = config['PATHS']['FIG']
-        self.Path_RawDataMix = config['PATHS']['RAWDATA_MIX']
-        self.Path_RawDataMix2 = config['PATHS']['RAWDATA_MIX2']
+        #self.Path_RawDataMix = config['PATHS']['RAWDATA_MIX']
+        #self.Path_RawDataMix2 = config['PATHS']['RAWDATA_MIX2']
         self.Div = float(params_input['division'])
         self.Ndays = int(config['PARAMS']['NDAYS'])
 
@@ -62,8 +63,12 @@ class ModelM(object):
         #self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
 
         ''' Synthetic mobility data '''
-        self.MobMat_freq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
-        self.MobMat_inc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
+        df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
+        df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
+
+        # drop first column containing municipality names.
+        self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
+        self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
 
         ''' Demographic data (home pop) '''
         DF_Demo = pd.read_csv(self.Path_DemoMat, delimiter=',')
@@ -130,8 +135,7 @@ class ModelM(object):
                         if r == 0 and g == 0 and person == 0:
                             DF = pd.DataFrame(DF_p)
                         else:
-                            DF = DF.append(pd.DataFrame(DF_p),
-                                           ignore_index=True)
+                            DF = pd.concat([DF, pd.DataFrame(DF_p)], ignore_index=True)
             for f in range(len(self.UniLocs)):
                 DF['F_'+str(f)] = PeopleMat[:, f]
             self.PeopleDFs.append(DF)
@@ -186,9 +190,12 @@ class ModelM(object):
     def save(self, seed):
         ''' Saves per seed '''
 
-        path = self.Path_Data+self.SaveName+'/'+'Seed_'+str(seed)+'/'
-        pathg = self.Path_Data+'General/'
-        pd.DataFrame(self.PeopleDFs[0]).to_pickle(path+'PeopleDF.pkl')
-        pd.DataFrame(self.UniLocs).to_pickle(pathg+'Gemeenten.pkl')
-        pd.DataFrame(self.UniIDs).to_pickle(pathg+'GemeentenID.pkl')
+        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data))
+        pathSeed = os.path.join(path, self.SaveName+'\\'+'Seed_'+str(seed)+'\\')
+        if not os.path.exists(pathSeed):
+            os.makedirs(pathSeed)
+
+        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed+'PeopleDF.pkl')
+        pd.DataFrame(self.UniLocs).to_pickle(path+'Gemeenten.pkl')
+        pd.DataFrame(self.UniIDs).to_pickle(path+'GemeentenID.pkl')
         np.save(path+'Positions', self.Positions_all)

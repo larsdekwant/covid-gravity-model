@@ -19,7 +19,8 @@ def draw_fractions(self, r, g):
     if self.UniGroups[g][0] in ['d', 'e', 'f', 'h']:
         lst = np.copy(self.MobMat_freq[r])
     else:
-        lst = np.copy(self.MobMat_inc[r])
+        a = self.MobMat_inc[r]
+        lst = np.copy(a)
     # if self.Intervention == 'Scen1':
     #     if self.UniGroups[g][0] in ['b', 'c', 'd']:
     #         lst = np.zeros(len(self.MobMat_inc[r]))
