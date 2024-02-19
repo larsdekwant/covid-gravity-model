@@ -15,7 +15,8 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 import scipy.sparse
-import warnings 
+import warnings
+import os
 from Functions import (get_mixmat, translate_polymod, new_mixmat, windowmean,
                        enter_phase2, enter_phase3,
                        enter_phase4, rivm_to_model, iconv,
@@ -46,19 +47,19 @@ class ModelT(object):
         self.T = int(params_input['Ndays'])
         self.Path_Data = config['PATHS']['DATA']
         self.Path_Datasave = config['PATHS']['FIG']
-        self.Path_RawDataMix = config['PATHS']['RAWDATA_MIX']
+        #self.Path_RawDataMix = config['PATHS']['RAWDATA_MIX']
         self.Path_RawDataMix2 = config['PATHS']['RAWDATA_MIX2']
         self.Path_InfData = config['PATHS']['INFDATA']
-        self.Path_ICData = config['PATHS']['ICDATA']
+        #self.Path_ICData = config['PATHS']['ICDATA']
         self.Path_GoogleData = config['PATHS']['GOOGLEDATA']
         self.Path_PienterData = config['PATHS']['PIENTERDATA']
         #self.Prob_ic = np.float(config['PARAMS']['PROB_IC'])
         #self.Frac_ic = np.float(config['PARAMS']['FRAC_IC'])
-        self.Prob_hos = np.float(config['PARAMS']['PROB_HOS'])#self.Prob_ic/self.Frac_ic
-        self.Hos_lag_av = np.float(config['PARAMS']['LAG_HOS_MEAN'])
-        self.Hos_lag_sh = np.float(config['PARAMS']['LAG_HOS_SHAPE'])
-        self.Threshold = np.float(config['PARAMS']['THRESH'])
-        self.Thresholdlocal = np.float(config['PARAMS']['THRESHLOCAL'])
+        self.Prob_hos = float(config['PARAMS']['PROB_HOS'])#self.Prob_ic/self.Frac_ic
+        self.Hos_lag_av = float(config['PARAMS']['LAG_HOS_MEAN'])
+        self.Hos_lag_sh = float(config['PARAMS']['LAG_HOS_SHAPE'])
+        self.Threshold = float(config['PARAMS']['THRESH'])
+        self.Thresholdlocal = float(config['PARAMS']['THRESHLOCAL'])
         if self.SaveName == 'High':
             self.Div = 100
         elif self.SaveName == 'Med':
@@ -79,13 +80,14 @@ class ModelT(object):
     def read_model_data(self):
         ''' Read raw data '''
 
-        pathg = self.Path_Data+'/General/'
-        path = self.Path_Data+self.SaveName+'/'+'Seed_'+str(self.Seed)+'/'
-        self.PeopleDF = pd.read_pickle(path+'PeopleDF.pkl')
+        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '\\'
+        pathSeed = os.path.join(path, self.SaveName + '\\' + 'Seed_' + str(self.Seed) + '\\')
+
+        self.PeopleDF = pd.read_pickle(pathSeed+'PeopleDF.pkl')
         self.Positions = np.load(path+'Positions.npy')
         self.Positions0 = np.load(path+'Positions.npy').astype(int)
-        self.UniLocs = np.array(pd.read_pickle(pathg+'Gemeenten.pkl')).T[0]
-        self.UniIDs = np.array(pd.read_pickle(pathg+'GemeentenID.pkl')).T[0]
+        self.UniLocs = np.array(pd.read_pickle(path+'Gemeenten.pkl')).T[0]
+        self.UniIDs = np.array(pd.read_pickle(path+'GemeentenID.pkl')).T[0]
         self.Homes = np.array(self.PeopleDF.Home)
         self.Groups = np.array(self.PeopleDF.Group)
         self.UniGroups = np.unique(self.Groups)
