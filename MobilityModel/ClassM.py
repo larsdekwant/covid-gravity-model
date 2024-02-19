@@ -190,7 +190,7 @@ class ModelM(object):
     def save(self, seed):
         ''' Saves per seed '''
 
-        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data))
+        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '\\'
         pathSeed = os.path.join(path, self.SaveName+'\\'+'Seed_'+str(seed)+'\\')
         if not os.path.exists(pathSeed):
             os.makedirs(pathSeed)

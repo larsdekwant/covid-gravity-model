@@ -35,7 +35,7 @@ import scipy.sparse
 
 for interv in ['schoolearly']:
     for run in [0]:
-        for seed in [3, 4, 5]:#range(5, 10):
+        for seed in range(5, 10):
             params_input = {'savename': 'High',
                             'intervention': interv,
                             'Ndays': 120*24,
