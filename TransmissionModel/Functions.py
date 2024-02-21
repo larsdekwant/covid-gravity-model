@@ -58,7 +58,7 @@ def iconv(i):
     return j
 
 def recalc_positions(self):
-    PosMat = np.zeros(shape=(7, 24, len(self.UniLocs), self.N))
+    PosMat = np.zeros(shape=(7, 24, len(self.UniLocs), self.N), dtype='uint8')
     for m in tqdm(range(len(self.UniLocs))):
         PosMat[:, :, m, :][self.Positions == m] = 1
     return PosMat, PosMat
