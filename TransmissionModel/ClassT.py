@@ -139,18 +139,25 @@ class ModelT(object):
         self.InfDF = self.InfDF[self.InfDF.index.isin(cleanedList)]
         self.InfDF = self.InfDF.reset_index(drop=True)
         Loc = np.array(self.InfDF.Municipality_name)
-        Day = np.array(pd.to_datetime(self.InfDF.Date_of_publication
-                                      ).dt.day)
-        Month = np.array(pd.to_datetime(self.InfDF.Date_of_publication
-                                        ).dt.month)
-        Year = np.array(pd.to_datetime(self.InfDF.Date_of_publication
-                                       ).dt.year)-2020
-        mondays = np.array([0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30,
-                            31, 31, 28, 31, 30, 31, 30, 31])
-        cumdays = np.cumsum(mondays)
-        Days = Day+np.array(cumdays)[Month-1+12*Year]
-        Index_f1 = np.where(Days <= 31+29+0) # up to (excl.) 1th Mar
-        Index_f1_adj = np.where(Days <= 31+29+0+self.Hos_lag_av) # up to (excl.) 1th Mar (+ lag)
+        # Day = np.array(pd.to_datetime(self.InfDF.Date_of_publication
+        #                               ).dt.day)
+        # Month = np.array(pd.to_datetime(self.InfDF.Date_of_publication
+        #                                 ).dt.month)
+        # Year = np.array(pd.to_datetime(self.InfDF.Date_of_publication
+        #                                ).dt.year)-2020
+        # mondays = np.array([0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30,
+        #                     31, 31, 28, 31, 30, 31, 30, 31])
+        # cumdays = np.cumsum(mondays)
+        # Days = Day+np.array(cumdays)[Month-1+12*Year]
+        # Index_f1 = np.where(Days <= 31 + 29 + 0)  # up to (excl.) 1th Mar
+        # Index_f1_adj = np.where(Days <= 31 + 29 + 0 + self.Hos_lag_av)  # up to (excl.) 1th Mar (+ lag)
+
+        # All indices from datapoints before mar 1st
+        date_march_first = pd.Timestamp('2022-03-01')
+        # Index_f1 = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication) < date_march_first])
+        Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication)
+                                                 < date_march_first + pd.DateOffset(self.Hos_lag_av)])
+
         I_rep = np.array(self.InfDF.Total_reported)
         I_hos = np.array(self.InfDF.Hospital_admission)
         F1_loc = Loc[Index_f1_adj]
