@@ -190,12 +190,12 @@ class ModelM(object):
     def save(self, seed):
         ''' Saves per seed '''
 
-        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '\\'
-        pathSeed = os.path.join(path, self.SaveName+'\\'+'Seed_'+str(seed)+'\\')
+        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
+        pathSeed = os.path.join(path, self.SaveName + '/Seed_' + str(seed) + '/')
         if not os.path.exists(pathSeed):
             os.makedirs(pathSeed)
 
-        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed+'PeopleDF.pkl')
-        pd.DataFrame(self.UniLocs).to_pickle(path+'Gemeenten.pkl')
-        pd.DataFrame(self.UniIDs).to_pickle(path+'GemeentenID.pkl')
+        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl')
+        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl')
+        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
         np.save(path+'Positions', self.Positions_all)

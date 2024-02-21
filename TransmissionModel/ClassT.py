@@ -80,8 +80,8 @@ class ModelT(object):
     def read_model_data(self):
         ''' Read raw data '''
 
-        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '\\'
-        pathSeed = os.path.join(path, self.SaveName + '\\' + 'Seed_' + str(self.Seed) + '\\')
+        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
+        pathSeed = os.path.join(path, self.SaveName + '/' + 'Seed_' + str(self.Seed) + '/')
 
         self.PeopleDF = pd.read_pickle(pathSeed+'PeopleDF.pkl')
         self.Positions = np.load(path+'Positions.npy')
@@ -163,7 +163,7 @@ class ModelT(object):
         F1_loc = Loc[Index_f1_adj]
 
         #F1_i = I_hos[Index_f1_adj]/self.Prob_hos
-        F1_i = I_rep[Index_f1_adj] / self.Prob_hos
+        F1_i = I_rep[Index_f1_adj] * self.Prob_hos
         self.InitialI = np.zeros(len(self.UniLocs))
         for i in range(len(self.UniLocs)):
             l = self.UniLocs[i]
@@ -539,13 +539,17 @@ class ModelT(object):
         ''' Saves '''
 
         add = ''#'_001'
+        path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
+        pathIntervention = os.path.join(path, self.SaveName + '/Seed_' + str(self.Seed) + '/Runs_' + self.Intervention + add)
+        if not os.path.exists(pathIntervention):
+            os.makedirs(pathIntervention)
+
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
-        path = self.Path_Data+self.SaveName+'/'+'Seed_'+str(self.Seed)+'/'
-        np.savetxt(path+'Runs_'+self.Intervention+add+'/Timestep_'+str(run), np.array([self.Timestep12March]))
-        scipy.sparse.save_npz(path+'Runs_'+self.Intervention+add+'/Status_'+str(run)+'.npz', Status_sparse)
-        pd.DataFrame(self.Phases).to_pickle(path+'Runs_'+self.Intervention+add+'/Phases_'+str(run)+'.pkl')
+        np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
+        scipy.sparse.save_npz(pathIntervention + '/Status_'+str(run)+'.npz', Status_sparse)
+        pd.DataFrame(self.Phases).to_pickle(pathIntervention + '/Phases_'+str(run)+'.pkl')
         if self.Intervention == 'border':
-            pd.DataFrame(self.TimeClosures).to_pickle(path+'Runs_'+self.Intervention+add+'/TimeClosures_'+str(run)+'.pkl')
+            pd.DataFrame(self.TimeClosures).to_pickle(pathIntervention + '/TimeClosures_'+str(run)+'.pkl')
         if self.Intervention == 'local':
-            pd.DataFrame(self.TimePhased).to_pickle(path+'Runs_'+self.Intervention+add+'/TimePhased_'+str(run)+'.pkl')
+            pd.DataFrame(self.TimePhased).to_pickle(pathIntervention + '/TimePhased_'+str(run)+'.pkl')
             
