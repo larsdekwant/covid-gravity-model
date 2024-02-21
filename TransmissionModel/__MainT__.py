@@ -38,7 +38,7 @@ for interv in ['schoolearly']:
         for seed in range(5, 10):
             params_input = {'savename': 'High',
                             'intervention': interv,
-                            'Ndays': 120*24,
+                            'Ndays': 14*24,
                             'seed': seed}
             ClassT = ModelT(params_input)
             ClassT.read_model_data()

@@ -277,7 +277,7 @@ def change_phases(self, phase, IR, t, t0):
         print('Entering phase 2')
         enter_phase2(self)
         phase = 2
-        t0 = np.float(t)
+        t0 = float(t)
         self.Timestep12March = t
         if self.Intervention == 'schoolextreme' or self.Intervention == 'schoolparents' or self.Intervention == 'schoolisolation':
             close_all_schools(self)
@@ -396,7 +396,7 @@ def change_phases_brablim(self, phase, IR, t, t0):
         print('Entering phase 2')
         enter_phase2_brablim(self)
         phase = 2
-        t0 = np.float(t)
+        t0 = float(t)
         self.Timestep12March = t
     elif phase == 2 and t == int(t0+4*24):
         brablim = np.where(self.Brablim == 1)[0]
@@ -487,7 +487,7 @@ def change_phases_G4(self, phase, IR, t, t0):
         print('Entering phase 2')
         enter_phase2_G4(self)
         phase = 2
-        t0 = np.float(t)
+        t0 = float(t)
         self.Timestep12March = t
     elif phase == 2 and t == int(t0+4*24):
         G4 = np.where(self.G4 == 1)[0]
@@ -774,7 +774,7 @@ def interv_border(self, Stat, t):
 #         if phase == 1 and totcum >= 0.019*totpop:  # 0.0095*self.N:
 #             enter_phase2(self)
 #             phase = 2
-#             t0 = np.float(t)
+#             t0 = float(t)
 #             self.WH = recalc_positions(self)
 #         elif phase == 2 and t == int(t0+11*24):
 #             enter_phase3(self)

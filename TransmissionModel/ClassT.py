@@ -53,8 +53,8 @@ class ModelT(object):
         #self.Path_ICData = config['PATHS']['ICDATA']
         self.Path_GoogleData = config['PATHS']['GOOGLEDATA']
         self.Path_PienterData = config['PATHS']['PIENTERDATA']
-        #self.Prob_ic = np.float(config['PARAMS']['PROB_IC'])
-        #self.Frac_ic = np.float(config['PARAMS']['FRAC_IC'])
+        #self.Prob_ic = float(config['PARAMS']['PROB_IC'])
+        #self.Frac_ic = float(config['PARAMS']['FRAC_IC'])
         self.Prob_hos = float(config['PARAMS']['PROB_HOS'])#self.Prob_ic/self.Frac_ic
         self.Hos_lag_av = float(config['PARAMS']['LAG_HOS_MEAN'])
         self.Hos_lag_sh = float(config['PARAMS']['LAG_HOS_SHAPE'])
@@ -360,7 +360,7 @@ class ModelT(object):
     #         if phase == 1 and totcum[t-1] >= 0.019*self.N:  # 0.0095*self.N:
     #             enter_phase2(self)
     #             phase = 2
-    #             t0 = np.float(t)
+    #             t0 = float(t)
     #             self.WH = recalc_positions(self)
     #         elif phase == 2 and t == int(t0+11*24):
     #             enter_phase3(self)
