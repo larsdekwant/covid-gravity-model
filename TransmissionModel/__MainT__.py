@@ -45,6 +45,6 @@ for interv in ['schoolearly']:
             ClassT.read_empirical_data()
             ClassT.set_parameters()
             ClassT.initialise()
-            #ClassT.simulate_new()
+            ClassT.simulate_new()
             ClassT.save(run)
             del ClassT
