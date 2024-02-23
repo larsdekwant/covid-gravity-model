@@ -32,6 +32,10 @@ warnings.filterwarnings("ignore")
 # Class object
 # --------------------------------------------------------------------------- #
 
+class SEIR_STATUS(Enum):
+    EXPOSED = 1
+    INFECTED = 2
+    RECOVERED = 3
 
 class ModelT(object):
     def __init__(self, params_input):
@@ -520,15 +524,15 @@ class ModelT(object):
             
             self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
             self.Rhos[En, 1] = t
-            Status[t, En] = 1
+            Status[t, En] = SEIR_STATUS.EXPOSED
             
             self.Rhos[In, 1] = np.nan
             self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
             self.Gammas[In, 1] = t
-            Status[t, In] = 2
+            Status[t, In] = SEIR_STATUS.INFECTED
             
             self.Gammas[Rn, 1] = np.nan
-            Status[t, Rn] = 3
+            Status[t, Rn] = SEIR_STATUS.RECOVERED
             
             Phases.append(phase)
             del En, In, Rn
