@@ -17,6 +17,7 @@ import numpy as np
 import scipy.sparse
 import warnings
 import os
+from enum import Enum
 from Functions import (get_mixmat, translate_polymod, new_mixmat, windowmean,
                        enter_phase2, enter_phase3,
                        enter_phase4, rivm_to_model, iconv,
@@ -32,10 +33,13 @@ warnings.filterwarnings("ignore")
 # Class object
 # --------------------------------------------------------------------------- #
 
-class SEIR_STATUS(Enum):
+
+class SeirStatus(Enum):
+    '''Enums for SEIR model'''
     EXPOSED = 1
     INFECTED = 2
     RECOVERED = 3
+
 
 class ModelT(object):
     def __init__(self, params_input):
@@ -210,6 +214,10 @@ class ModelT(object):
         self.InitialI = np.round(self.InitialI/self.Div).astype(int)
 
         # ''' Mixing data from PIENTER '''
+        # PIENTER data unavailable, so use matrices that don't change anything.
+        self.MixChange_phase2 = np.ones(shape=(11, 11))
+        self.MixChange_phase4 = np.ones(shape=(11, 11))
+
         # self.PienterDF = pd.read_csv(self.Path_PienterData, delimiter='\t')
         # groups = np.array(['[0,5)', '[5,10)', '[10,20)', '[20,30)',
         #                    '[30,40)', '[40,50)', '[50,60)', '[60,70)',
@@ -232,10 +240,6 @@ class ModelT(object):
         # June2020 = rivm_to_model(MatJun)
         # self.MixChange_phase2 = April2020/Reference
         # self.MixChange_phase4 = June2020/Reference
-
-        # PIENTER data unavailable, so use matrices that don't change anything.
-        self.MixChange_phase2 = np.ones(shape=(11, 11))
-        self.MixChange_phase4 = np.ones(shape=(11, 11))
 
         ''' Mobility data from Google '''
         self.GoogleDF = pd.read_csv(self.Path_GoogleData)
@@ -524,15 +528,15 @@ class ModelT(object):
             
             self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
             self.Rhos[En, 1] = t
-            Status[t, En] = SEIR_STATUS.EXPOSED
+            Status[t, En] = SeirStatus.EXPOSED.value
             
             self.Rhos[In, 1] = np.nan
             self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
             self.Gammas[In, 1] = t
-            Status[t, In] = SEIR_STATUS.INFECTED
+            Status[t, In] = SeirStatus.INFECTED.value
             
             self.Gammas[Rn, 1] = np.nan
-            Status[t, Rn] = SEIR_STATUS.RECOVERED
+            Status[t, Rn] = SeirStatus.RECOVERED.value
             
             Phases.append(phase)
             del En, In, Rn
