@@ -55,7 +55,7 @@ class ModelT(object):
         self.T = int(params_input['Ndays'])
         self.Path_Data = config['PATHS']['DATA']
         self.Path_Datasave = config['PATHS']['FIG']
-        #self.Path_RawDataMix = config['PATHS']['RAWDATA_MIX']
+        self.Path_RawDataGem = config['PATHS']['RAWDATA_GEM']
         self.Path_RawDataMix2 = config['PATHS']['RAWDATA_MIX2']
         self.Path_InfData = config['PATHS']['INFDATA']
         #self.Path_ICData = config['PATHS']['ICDATA']
@@ -160,7 +160,7 @@ class ModelT(object):
         # Index_f1 = np.where(Days <= 31 + 29 + 0)  # up to (excl.) 1th Mar
         # Index_f1_adj = np.where(Days <= 31 + 29 + 0 + self.Hos_lag_av)  # up to (excl.) 1th Mar (+ lag)
 
-        # All indices from datapoints before mar 1st
+        # Get all indices from datapoints before mar 1st
         date_march_first = pd.Timestamp('2022-03-01')
         # Index_f1 = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication) < date_march_first])
         Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication)
@@ -267,7 +267,7 @@ class ModelT(object):
             self.MobChange_phase4 = 0
         
         if self.Intervention == 'brablim':
-            df = pd.read_csv('/Users/mmdekker/Documents/Werk/Data/CBS/Gemeenten2018.csv', delimiter=';', encoding='latin')
+            df = pd.read_csv(self.Path_RawDataGem, delimiter=';', encoding='latin')
             ids = np.array(df.Gemeentecode).astype(int)
             provs = np.array(df.Provincienaam)
             self.Brablim = np.zeros(len(self.UniLocs))
