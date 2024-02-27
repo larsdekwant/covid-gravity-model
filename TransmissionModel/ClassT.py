@@ -9,6 +9,7 @@
 import configparser
 import sys
 import scipy.io
+
 import matplotlib.pyplot as plt
 import networkx as nx
 from tqdm import tqdm
@@ -173,6 +174,8 @@ class ModelT(object):
         #F1_i = I_hos[Index_f1_adj]/self.Prob_hos
         F1_i = I_rep[Index_f1_adj] * self.Prob_hos
         self.InitialI = np.zeros(len(self.UniLocs))
+
+        print(np.sum(self.InitialI))
         for i in range(len(self.UniLocs)):
             l = self.UniLocs[i]
             w = np.where(F1_loc == l)[0]
@@ -212,6 +215,7 @@ class ModelT(object):
                 elif l in ['Haaren', 'Oisterwijk']:
                     self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Oisterwijk'])/2
         self.InitialI = np.round(self.InitialI/self.Div).astype(int)
+
 
         # ''' Mixing data from PIENTER '''
         # PIENTER data unavailable, so use matrices that don't change anything.
@@ -291,7 +295,7 @@ class ModelT(object):
 
         self.N = len(self.PeopleDF)     # Amount of people
         self.T = self.T                 # Amount of hours simulated
-        self.EI_l = 4.6                 # was 5.5
+        self.EI_l = 4.6                 # was 5.5     play around with this variable
         self.EI_k = 20
         self.IR_l = 5                   # was 10
         self.IR_k = 1.0                 # was 0.8
