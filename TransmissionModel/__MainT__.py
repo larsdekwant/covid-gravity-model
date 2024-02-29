@@ -34,7 +34,7 @@ import scipy.sparse
     # 'brablim'
 
 for interv in ['behavior']:
-    for run in [1]:
+    for run in [2]:
         for seed in range(0, 1):
             params_input = {'savename': 'High',
                             'intervention': interv,
