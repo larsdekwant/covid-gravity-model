@@ -219,31 +219,31 @@ class ModelT(object):
 
         # ''' Mixing data from PIENTER '''
         # no behavioral changes
-        #self.MixChange_phase2 = np.ones(shape=(11, 11))
-        #self.MixChange_phase4 = np.ones(shape=(11, 11))
+        self.MixChange_phase2 = np.ones(shape=(11, 11))
+        self.MixChange_phase4 = np.ones(shape=(11, 11))
 
-        self.PienterDF = pd.read_csv(self.Path_PienterData, delimiter='\t')
-        groups = np.array(['[0,5)', '[5,10)', '[10,20)', '[20,30)',
-                           '[30,40)', '[40,50)', '[50,60)', '[60,70)',
-                           '[70,80)', '[80,Inf]'])
-        MatRef = np.zeros(shape=(len(groups), len(groups)))
-        MatApr = np.zeros(shape=(len(groups), len(groups)))
-        MatJun = np.zeros(shape=(len(groups), len(groups)))
-        for i in range(len(groups)):
-            MatRef[i] = np.array(self.PienterDF[(self.PienterDF.survey == 'baseline') &
-                                                (self.PienterDF.contact_type == 'all') &
-                                                (self.PienterDF.part_age == groups[i])].m_est)
-            MatApr[i] = np.array(self.PienterDF[(self.PienterDF.survey == 'April 2020') &
-                                                (self.PienterDF.contact_type == 'all') &
-                                                (self.PienterDF.part_age == groups[i])].m_est)
-            MatJun[i] = np.array(self.PienterDF[(self.PienterDF.survey == 'June 2020') &
-                                                (self.PienterDF.contact_type == 'all') &
-                                                (self.PienterDF.part_age == groups[i])].m_est)
-        Reference = rivm_to_model(MatRef)
-        April2020 = rivm_to_model(MatApr)
-        June2020 = rivm_to_model(MatJun)
-        self.MixChange_phase2 = April2020/Reference
-        self.MixChange_phase4 = June2020/Reference
+        # self.PienterDF = pd.read_csv(self.Path_PienterData, delimiter='\t')
+        # groups = np.array(['[0,5)', '[5,10)', '[10,20)', '[20,30)',
+        #                    '[30,40)', '[40,50)', '[50,60)', '[60,70)',
+        #                    '[70,80)', '[80,Inf]'])
+        # MatRef = np.zeros(shape=(len(groups), len(groups)))
+        # MatApr = np.zeros(shape=(len(groups), len(groups)))
+        # MatJun = np.zeros(shape=(len(groups), len(groups)))
+        # for i in range(len(groups)):
+        #     MatRef[i] = np.array(self.PienterDF[(self.PienterDF.survey == 'baseline') &
+        #                                         (self.PienterDF.contact_type == 'all') &
+        #                                         (self.PienterDF.part_age == groups[i])].m_est)
+        #     MatApr[i] = np.array(self.PienterDF[(self.PienterDF.survey == 'April 2020') &
+        #                                         (self.PienterDF.contact_type == 'all') &
+        #                                         (self.PienterDF.part_age == groups[i])].m_est)
+        #     MatJun[i] = np.array(self.PienterDF[(self.PienterDF.survey == 'June 2020') &
+        #                                         (self.PienterDF.contact_type == 'all') &
+        #                                         (self.PienterDF.part_age == groups[i])].m_est)
+        # Reference = rivm_to_model(MatRef)
+        # April2020 = rivm_to_model(MatApr)
+        # June2020 = rivm_to_model(MatJun)
+        # self.MixChange_phase2 = April2020/Reference
+        # self.MixChange_phase4 = June2020/Reference
 
         ''' Mobility data from Google '''
         self.GoogleDF = pd.read_csv(self.Path_GoogleData)
