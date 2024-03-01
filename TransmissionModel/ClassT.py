@@ -59,6 +59,7 @@ class ModelT(object):
         self.Path_RawDataGem = config['PATHS']['RAWDATA_GEM']
         self.Path_RawDataMix2 = config['PATHS']['RAWDATA_MIX2']
         self.Path_InfData = config['PATHS']['INFDATA']
+        self.Path_HosData = config['PATHS']['HOSDATA']
         #self.Path_ICData = config['PATHS']['ICDATA']
         self.Path_GoogleData = config['PATHS']['GOOGLEDATA']
         self.Path_PienterData = config['PATHS']['PIENTERDATA']
@@ -142,7 +143,7 @@ class ModelT(object):
         ''' Read COVID / IC-incident data from RIVM '''
         
         ''' Inf data '''
-        self.InfDF = pd.read_csv(self.Path_InfData, delimiter=';')
+        self.InfDF = pd.read_csv(self.Path_HosData, delimiter=';')
         Loc = np.array(self.InfDF.Municipality_code)
         cleanedList = [x for x in range(len(Loc)) if str(Loc[x]) != 'nan']
         self.InfDF = self.InfDF[self.InfDF.index.isin(cleanedList)]
@@ -164,15 +165,23 @@ class ModelT(object):
         # Get all indices from datapoints before mar 1st
         date_march_first = pd.Timestamp('2022-03-01')
         # Index_f1 = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication) < date_march_first])
-        Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication)
+        #Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication)
+        #                                         < date_march_first + pd.DateOffset(self.Hos_lag_av)])
+
+        # Compute infected through hospital admission data (use self.Path_HosData dataset)
+        Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_statistics)
                                                  < date_march_first + pd.DateOffset(self.Hos_lag_av)])
-
-        I_rep = np.array(self.InfDF.Total_reported)
-        #I_hos = np.array(self.InfDF.Hospital_admission)
+        I_hos = np.array(self.InfDF.Hospital_admission)
         F1_loc = Loc[Index_f1_adj]
+        F1_i = I_hos[Index_f1_adj] / self.Prob_hos
 
-        #F1_i = I_hos[Index_f1_adj]/self.Prob_hos
-        F1_i = I_rep[Index_f1_adj] * self.Prob_hos
+        # Compute infected through reported cases (use self.Path_InfData dataset)
+        # Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication)
+        #                                         < date_march_first + pd.DateOffset(self.Hos_lag_av)])
+        #I_rep = np.array(self.InfDF.Total_reported)
+        #F1_loc = Loc[Index_f1_adj]
+        #F1_i = I_rep[Index_f1_adj]
+
         self.InitialI = np.zeros(len(self.UniLocs))
 
         for i in range(len(self.UniLocs)):
@@ -214,7 +223,7 @@ class ModelT(object):
                 elif l in ['Haaren', 'Oisterwijk']:
                     self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Oisterwijk'])/2
         self.InitialI = np.round(self.InitialI/self.Div).astype(int)
-
+        print('Initial infected at t=0: ' + str(np.sum(self.InitialI)))
 
         # ''' Mixing data from PIENTER '''
         # no behavioral changes
