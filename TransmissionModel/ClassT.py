@@ -162,8 +162,8 @@ class ModelT(object):
         # Index_f1 = np.where(Days <= 31 + 29 + 0)  # up to (excl.) 1th Mar
         # Index_f1_adj = np.where(Days <= 31 + 29 + 0 + self.Hos_lag_av)  # up to (excl.) 1th Mar (+ lag)
 
-        # Get all indices from datapoints before mar 1st
-        date_march_first = pd.Timestamp('2022-03-01')
+        # Get all indices from datapoints before mar 1st 2020
+        date_march_first = pd.Timestamp('2020-03-01')
         # Index_f1 = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication) < date_march_first])
         #Index_f1_adj = np.array(self.InfDF.index[pd.to_datetime(self.InfDF.Date_of_publication)
         #                                         < date_march_first + pd.DateOffset(self.Hos_lag_av)])
