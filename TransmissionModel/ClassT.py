@@ -537,11 +537,11 @@ class ModelT(object):
             
             # SAVE NEW STATUS AND RHO/GAMMA TIME SCALES
             Status[t] = Status[t-1]
-            
+
             self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
             self.Rhos[En, 1] = t
             Status[t, En] = SeirStatus.EXPOSED.value
-            
+
             self.Rhos[In, 1] = np.nan
             self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
             self.Gammas[In, 1] = t

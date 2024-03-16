@@ -34,11 +34,11 @@ import scipy.sparse
     # 'brablim'
 
 for interv in ['ref']:
-    for run in [4]:
-        for seed in [2]:
+    for run in [1, 2]:
+        for seed in [0]:
             params_input = {'savename': 'High',
                             'intervention': interv,
-                            'Ndays': 120*24,
+                            'Ndays': 120 * 24,
                             'seed': seed}
             ClassT = ModelT(params_input)
             ClassT.read_model_data()
