@@ -34,7 +34,7 @@ import scipy.sparse
     # 'brablim'
 
 for interv in ['ref']:
-    for run in [1, 2]:
+    for run in [2,3,4]:
         for seed in [0]:
             params_input = {'savename': 'High',
                             'intervention': interv,
