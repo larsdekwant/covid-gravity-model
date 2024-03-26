@@ -225,7 +225,7 @@ class ModelT(object):
         self.InitialI = np.round(self.InitialI/self.Div).astype(int)
         print('Initial infected at t=0: ' + str(np.sum(self.InitialI)))
 
-        # ''' Mixing data from PIENTER '''
+        ''' Mixing data from PIENTER '''
         # no behavioral changes
         # self.MixChange_phase2 = np.ones(shape=(11, 11))
         # self.MixChange_phase4 = np.ones(shape=(11, 11))
