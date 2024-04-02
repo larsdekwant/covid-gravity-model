@@ -33,7 +33,7 @@ class ModelM(object):
 
         ''' Variables '''
         self.SaveName = params_input['savename']
-        #self.Path_RawDataDay = config['PATHS']['RAWDATA_DAY']
+        self.Path_RawDataDay = config['PATHS']['RAWDATA_DAY']
         self.Path_RawDataDayFreq = config['PATHS']['RAWDATA_DAY_FREQ']
         self.Path_RawDataDayInc = config['PATHS']['RAWDATA_DAY_INC']
         self.Path_RawDataGem = config['PATHS']['RAWDATA_GEM_TOTAL']
@@ -60,15 +60,15 @@ class ModelM(object):
         self.UniIDs = [list(self.DF_Gem.Gemeentecode[self.DF_Gem.Gemeentenaam == i])[0] for i in self.UniLocs]
 
         ''' Mezuro data '''
-        #self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
+        self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
 
         ''' Synthetic mobility data '''
         df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
         df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
 
         # drop first column containing municipality names.
-        self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
-        self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
+        #self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
+        #self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
 
         ''' Demographic data (home pop) '''
         DF_Demo = pd.read_csv(self.Path_DemoMat, delimiter=',')
