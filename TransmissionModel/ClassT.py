@@ -298,14 +298,14 @@ class ModelT(object):
                 if self.UniLocs[m] in ['Amsterdam', 'Rotterdam', 'Utrecht', "'s-Gravenhage"]:
                     self.G4[m] = 1
 
-    def set_parameters(self):
+    def set_parameters(self, ir_l):
         ''' Read raw data '''
 
         self.N = len(self.PeopleDF)     # Amount of people
         self.T = self.T                 # Amount of hours simulated
         self.EI_l = 4.6                 # was 5.5     play around with this variable
         self.EI_k = 20
-        self.IR_l = 5                   # was 10
+        self.IR_l = ir_l #5                # was 10
         self.IR_k = 1.0                 # was 0.8
         self.Beta_f1 = 0.135#0.09
         self.Beta_f2 = 0.11#0.06
