@@ -22,7 +22,9 @@ params_input = {'savename': 'High',
                 'division': 100 # 5000 - 1000 - 500 - 100
                 }
 ClassM = ModelM(params_input)
+
 ClassM.read_data()
+print(ClassM.UniLocs)
 ClassM.mobility_matrix()
 for mc in [0]:
     ClassM.create_people_DF()

@@ -57,6 +57,17 @@ class ModelM(object):
         ''' Get main municipality list (for version control): 2018 '''
         self.DF_Gem = pd.read_csv(self.Path_RawDataGem, delimiter=';', encoding='latin-1')
         self.UniLocs = np.unique(self.DF_Gem.Gemeentenaam)
+        def custom_sort(place):
+            if place == "'s-Gravenhage":
+                return ''
+            elif place == "'s-Hertogenbosch":
+                return ' '
+            else:
+                return place
+
+        sorted_places = sorted(self.UniLocs, key=custom_sort)
+
+        
         self.UniIDs = [list(self.DF_Gem.Gemeentecode[self.DF_Gem.Gemeentenaam == i])[0] for i in self.UniLocs]
 
         ''' Mezuro data '''
@@ -114,6 +125,9 @@ class ModelM(object):
             mi[d] = (MobMat_inc/self.Div).astype(int)
         self.MobMat_freq = np.nanmean(mf, axis=0)
         self.MobMat_inc = np.nanmean(mi, axis=0)
+        np.save("../Data/MobMat_freq_mezuro.npy", self.MobMat_freq)
+        np.save("../Data/MobMat_inc_mezuro.npy", self.MobMat_inc)
+
 
     def create_people_DF(self):
         ''' Create day schedules per person '''
