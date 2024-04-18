@@ -298,14 +298,16 @@ class ModelT(object):
                 if self.UniLocs[m] in ['Amsterdam', 'Rotterdam', 'Utrecht', "'s-Gravenhage"]:
                     self.G4[m] = 1
 
-    def set_parameters(self, ir_l):
+    def set_parameters(self, latent=4.6, incub=3, infect=5):
         ''' Read raw data '''
 
         self.N = len(self.PeopleDF)     # Amount of people
         self.T = self.T                 # Amount of hours simulated
-        self.EI_l = 4.6                 # was 5.5     play around with this variable
+        self.Incub_time_mean = incub
+        self.Incub_time_shape = 20
+        self.EI_l = latent # 4.6                 # was 5.5     play around with this variable
         self.EI_k = 20
-        self.IR_l = ir_l #5                # was 10
+        self.IR_l = infect # 5                # was 10
         self.IR_k = 1.0                 # was 0.8
         self.Beta_f1 = 0.135#0.09
         self.Beta_f2 = 0.11#0.06
@@ -326,8 +328,11 @@ class ModelT(object):
                 wh = np.where(self.Homes == self.UniLocs[i])[0]
                 self.Init[np.random.choice(wh, size=amount, replace=False)] = 2
         wh = np.where(self.Init == 2)[0]
+
         self.Gammas = np.zeros(shape=(self.N, 2))+np.nan
+        self.Incub = np.zeros(shape=(self.N, 2))+np.nan
         self.Rhos = np.zeros(shape=(self.N, 2))+np.nan
+
         self.Rhos[wh, 0] = 24*np.random.weibull(self.EI_k, size=len(wh))*self.EI_l
         self.Rhos[wh, 1] = np.random.choice(np.arange(-5.5*24, 0), size=len(wh))
         
@@ -449,6 +454,7 @@ class ModelT(object):
         self.Schoolers = np.where((self.Groups == 'b) Primary school children') |
                                   (self.Groups == 'c) Secondary school children') |
                                   (self.Groups == 'd) Students'))[0]
+        self.symptomatic = []
         
         GroupsMat = np.zeros(shape=(11, self.N))
         for g in range(11):
@@ -528,10 +534,13 @@ class ModelT(object):
             if self.Intervention == 'border': # this is complementary to regular phase changing
                 interv_border(self, Status[t-1], t)
             
-            # TRANSMISSION
+            # TRANSMISSION: determine exposed, symptomatic, infectious and recovered
             day = np.mod(int(np.floor(t/24)), 7)
             hour = np.mod(t, 24)
             En = determine_exposed(self, Status[t-1], day, hour, phase)
+            Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
+            print(len(Sn))
+            self.symptomatic = Sn
             In = np.where(self.Rhos.sum(axis=1) <= t)[0]
             Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
             
@@ -542,11 +551,16 @@ class ModelT(object):
             self.Rhos[En, 1] = t
             Status[t, En] = SeirStatus.EXPOSED.value
 
+            # Track at what timestep agents will become symptomatic
+            self.Incub[En, 0] = 24*np.random.weibull(self.Incub_time_shape, size=len(En))*self.Incub_time_mean
+            self.Incub[En, 1] = t
+
             self.Rhos[In, 1] = np.nan
             self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
             self.Gammas[In, 1] = t
             Status[t, In] = SeirStatus.INFECTED.value
-            
+
+            self.Incub[Rn, 1] = np.nan
             self.Gammas[Rn, 1] = np.nan
             Status[t, Rn] = SeirStatus.RECOVERED.value
             

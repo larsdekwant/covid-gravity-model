@@ -73,6 +73,10 @@ def determine_exposed(self, Stat, day, hour, phase):
     Svec[Stat == 0] = 1
     Ivec = np.zeros(self.N)
     Ivec[Stat == 2] = 1
+
+    # symptomatic people stay at home.
+    Ivec[self.symptomatic] = 0
+
     Lvec = np.zeros(self.N)
     Ipos = scipy.sparse.csr_matrix(self.PosMat[day, hour])
     Is = scipy.sparse.csr_matrix((self.GroupsMat_sp.multiply(Ivec)).toarray()).T
