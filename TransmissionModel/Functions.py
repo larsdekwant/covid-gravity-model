@@ -74,8 +74,9 @@ def determine_exposed(self, Stat, day, hour, phase):
     Ivec = np.zeros(self.N)
     Ivec[Stat == 2] = 1
 
-    # symptomatic people stay at home.
-    Ivec[self.symptomatic] = 0
+    # self_isolating people stay at home when they show symptoms, so are removed from the exposed computation.
+    self_isolating = list(np.random.choice(self.symptomatic, size=int(len(self.symptomatic) * self.self_isolate_perc), replace=False))
+    Ivec[self_isolating] = 0
 
     Lvec = np.zeros(self.N)
     Ipos = scipy.sparse.csr_matrix(self.PosMat[day, hour])

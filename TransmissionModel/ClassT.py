@@ -300,11 +300,13 @@ class ModelT(object):
 
     def set_parameters(self, latent=4.6, incub=3, infect=5):
         ''' Read raw data '''
+        print('params: latent=' + str(latent) + ' incubation=' +str(incub) + ' infection=' + str(infect))
 
         self.N = len(self.PeopleDF)     # Amount of people
         self.T = self.T                 # Amount of hours simulated
         self.Incub_time_mean = incub
         self.Incub_time_shape = 20
+        self.self_isolate_perc = 0.8
         self.EI_l = latent # 4.6                 # was 5.5     play around with this variable
         self.EI_k = 20
         self.IR_l = infect # 5                # was 10
@@ -513,34 +515,35 @@ class ModelT(object):
             # NEW IR? <--- let op
             # IR = len(np.where(Status[t-1] >= 2)[0])
             
-            # INTERVENTIONS
-            if self.Intervention == 'local':
-                if self.Predated == 0:
-                    IR = len(np.where(Status[t-1] >= 2)[0])
-                    national_datesetting(self, t, IR)
-                if self.Predated == 1:
-                    phase, t0 = interv_local(self, Status[t-1], t, phase, t0)
-            elif self.Intervention == 'brablim':
-                phase, t0 = change_phases_brablim(self, phase, IR, t, t0)
-                self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
-                self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
-            elif self.Intervention == 'G4':
-                phase, t0 = change_phases_G4(self, phase, IR, t, t0)
-                self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
-                self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
-            else:
-                IR = len(np.where(Status[t-1] >= 2)[0])
-                phase, t0 = change_phases(self, phase, IR, t, t0)
-            if self.Intervention == 'border': # this is complementary to regular phase changing
-                interv_border(self, Status[t-1], t)
+            # # INTERVENTIONS
+            # if self.Intervention == 'local':
+            #     if self.Predated == 0:
+            #         IR = len(np.where(Status[t-1] >= 2)[0])
+            #         national_datesetting(self, t, IR)
+            #     if self.Predated == 1:
+            #         phase, t0 = interv_local(self, Status[t-1], t, phase, t0)
+            # elif self.Intervention == 'brablim':
+            #     phase, t0 = change_phases_brablim(self, phase, IR, t, t0)
+            #     self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
+            #     self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
+            # elif self.Intervention == 'G4':
+            #     phase, t0 = change_phases_G4(self, phase, IR, t, t0)
+            #     self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
+            #     self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
+            # else:
+            #     IR = len(np.where(Status[t-1] >= 2)[0])
+            #     phase, t0 = change_phases(self, phase, IR, t, t0)
+            # if self.Intervention == 'border': # this is complementary to regular phase changing
+            #     interv_border(self, Status[t-1], t)
             
             # TRANSMISSION: determine exposed, symptomatic, infectious and recovered
             day = np.mod(int(np.floor(t/24)), 7)
             hour = np.mod(t, 24)
             En = determine_exposed(self, Status[t-1], day, hour, phase)
+
             Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
-            print(len(Sn))
             self.symptomatic = Sn
+
             In = np.where(self.Rhos.sum(axis=1) <= t)[0]
             Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
             
@@ -571,10 +574,9 @@ class ModelT(object):
 
     def save(self, run):
         ''' Saves '''
-
-        add = ''#'_001'
+        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l)
         path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
-        pathIntervention = os.path.join(path, self.SaveName + '/Seed_' + str(self.Seed) + '/Runs_' + self.Intervention + add)
+        pathIntervention = os.path.join(path, self.SaveName + '/Seed_' + str(self.Seed) + '/Runs_' + self.Intervention + parameters)
         if not os.path.exists(pathIntervention):
             os.makedirs(pathIntervention)
 
