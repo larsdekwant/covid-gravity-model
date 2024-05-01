@@ -35,13 +35,13 @@ import scipy.sparse
 
 for interv in ['ref']:
     for run in [0]:
-        for seed in [3]:
-            for latent in [3,6,9]:
-                for incub in [3,6,9]:
+        for seed in [4]:
+            for latent in [3]:
+                for incub in [3]:
                     for infect in [5]:
                         params_input = {'savename': 'High',
                                         'intervention': interv,
-                                        'Ndays': 28 * 24,
+                                        'Ndays': 1 * 24,
                                         'seed': seed}
                         ClassT = ModelT(params_input)
                         ClassT.read_model_data()

@@ -182,47 +182,49 @@ class ModelT(object):
         #F1_loc = Loc[Index_f1_adj]
         #F1_i = I_rep[Index_f1_adj]
 
-        self.InitialI = np.zeros(len(self.UniLocs))
+        self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
+        groundzero = np.where(self.UniLocs == 'Eindhoven')[0]
+        self.InitialI[groundzero] = 1000
 
-        for i in range(len(self.UniLocs)):
-            l = self.UniLocs[i]
-            w = np.where(F1_loc == l)[0]
-            if len(w) > 0:
-                self.InitialI[i] = np.nansum(F1_i[w])
-            else:
-                if l in ['Aalburg', 'Werkendam', 'Woudrichem']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Altena'])/3
-                elif l in ['Dongeradeel', 'Ferwerderadiel', 'Kollumerland en Nieuwkruisland']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Noardeast-Fryslân'])/3
-                elif l in ['Geldermalsen', 'Lingewaal', 'Neerijnen']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'West Betuwe'])/3
-                elif l in ['Groningen', 'Haren', 'Ten Boer']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Groningen'])/3
-                elif l in ['Bedum', 'De Marne', 'Eemsmond', 'Winsum']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Het Hogeland'])/4
-                elif l in ['Grootegast', 'Leek', 'Marum', 'Zuidhorn']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Westerkwartier'])/4
-                elif l in ['Nuth', 'Onderbanken', 'Schinnen']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Beekdaelen'])/3
-                elif l in ['Haarlemmerliede en Spaarnwoude', 'Haarlemmermeer']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Haarlemmermeer'])/2
-                elif l in ['Leerdam', 'Zederik', 'Vianen']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Vijfheerenlande'])/3
-                elif l in ['Binnenmaas', 'Cromstrijen', 'Korendijk', 'Oud-Beijerland', 'Strijen']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Hoeksche Waard'])/5
-                elif l in ['Giessenlanden', 'Molenwaard']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Molenlanden'])/2
-                elif l in ['Noordwijk', 'Noordwijkerhout']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Noordwijk'])/2
-                elif l in ['Appingedam', 'Delfzijl', 'Loppersum']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Eemsdelta'])/3
-                elif l in ['Sdwest-Frysln']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'S\x9cdwest-Frysl\x89n'])
-                elif l in ['Hengelo']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Hengelo (O.)'])
-                elif l in ['Haaren', 'Oisterwijk']:
-                    self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Oisterwijk'])/2
-        self.InitialI = np.round(self.InitialI/self.Div).astype(int)
+        # for i in range(len(self.UniLocs)):
+        #     l = self.UniLocs[i]
+        #     w = np.where(F1_loc == l)[0]
+        #     if len(w) > 0:
+        #         self.InitialI[i] = np.nansum(F1_i[w])
+        #     else:
+        #         if l in ['Aalburg', 'Werkendam', 'Woudrichem']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Altena'])/3
+        #         elif l in ['Dongeradeel', 'Ferwerderadiel', 'Kollumerland en Nieuwkruisland']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Noardeast-Fryslân'])/3
+        #         elif l in ['Geldermalsen', 'Lingewaal', 'Neerijnen']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'West Betuwe'])/3
+        #         elif l in ['Groningen', 'Haren', 'Ten Boer']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Groningen'])/3
+        #         elif l in ['Bedum', 'De Marne', 'Eemsmond', 'Winsum']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Het Hogeland'])/4
+        #         elif l in ['Grootegast', 'Leek', 'Marum', 'Zuidhorn']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Westerkwartier'])/4
+        #         elif l in ['Nuth', 'Onderbanken', 'Schinnen']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Beekdaelen'])/3
+        #         elif l in ['Haarlemmerliede en Spaarnwoude', 'Haarlemmermeer']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Haarlemmermeer'])/2
+        #         elif l in ['Leerdam', 'Zederik', 'Vianen']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Vijfheerenlande'])/3
+        #         elif l in ['Binnenmaas', 'Cromstrijen', 'Korendijk', 'Oud-Beijerland', 'Strijen']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Hoeksche Waard'])/5
+        #         elif l in ['Giessenlanden', 'Molenwaard']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Molenlanden'])/2
+        #         elif l in ['Noordwijk', 'Noordwijkerhout']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Noordwijk'])/2
+        #         elif l in ['Appingedam', 'Delfzijl', 'Loppersum']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Eemsdelta'])/3
+        #         elif l in ['Sdwest-Frysln']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'S\x9cdwest-Frysl\x89n'])
+        #         elif l in ['Hengelo']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Hengelo (O.)'])
+        #         elif l in ['Haaren', 'Oisterwijk']:
+        #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Oisterwijk'])/2
+        # self.InitialI = np.round(self.InitialI/self.Div).astype(int)
         print('Initial infected at t=0: ' + str(np.sum(self.InitialI)))
 
         ''' Mixing data from PIENTER '''
@@ -322,6 +324,8 @@ class ModelT(object):
 
     def initialise(self):
         ''' Initialise transmission model '''
+
+        self.contacts = np.zeros(shape=(380,11), dtype=int)
         
         self.Init = np.zeros(len(self.Homes))
         for i in range(len(self.UniLocs)):
@@ -580,6 +584,7 @@ class ModelT(object):
         if not os.path.exists(pathIntervention):
             os.makedirs(pathIntervention)
 
+        np.save(pathIntervention + 'Contacts', self.contacts)
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
         np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
         scipy.sparse.save_npz(pathIntervention + '/Status_'+str(run)+'.npz', Status_sparse)
