@@ -325,7 +325,7 @@ class ModelT(object):
     def initialise(self):
         ''' Initialise transmission model '''
 
-        self.contacts = np.zeros(shape=(380,11), dtype=int)
+        self.contacts = np.zeros(shape=(380, 11), dtype=int)
         
         self.Init = np.zeros(len(self.Homes))
         for i in range(len(self.UniLocs)):
