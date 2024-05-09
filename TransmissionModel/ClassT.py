@@ -183,7 +183,7 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Eindhoven')[0]
+        groundzero = np.where(self.UniLocs == 'Groningen')[0]
         self.InitialI[groundzero] = 1000
 
         # for i in range(len(self.UniLocs)):
@@ -544,35 +544,35 @@ class ModelT(object):
             day = np.mod(int(np.floor(t/24)), 7)
             hour = np.mod(t, 24)
             En = determine_exposed(self, Status[t-1], day, hour, phase)
-
-            Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
-            self.symptomatic = Sn
-
-            In = np.where(self.Rhos.sum(axis=1) <= t)[0]
-            Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
-            
-            # SAVE NEW STATUS AND RHO/GAMMA TIME SCALES
-            Status[t] = Status[t-1]
-
-            self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
-            self.Rhos[En, 1] = t
-            Status[t, En] = SeirStatus.EXPOSED.value
-
-            # Track at what timestep agents will become symptomatic
-            self.Incub[En, 0] = 24*np.random.weibull(self.Incub_time_shape, size=len(En))*self.Incub_time_mean
-            self.Incub[En, 1] = t
-
-            self.Rhos[In, 1] = np.nan
-            self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
-            self.Gammas[In, 1] = t
-            Status[t, In] = SeirStatus.INFECTED.value
-
-            self.Incub[Rn, 1] = np.nan
-            self.Gammas[Rn, 1] = np.nan
-            Status[t, Rn] = SeirStatus.RECOVERED.value
-            
-            Phases.append(phase)
-            del En, In, Rn
+            #
+            # Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
+            # self.symptomatic = Sn
+            #
+            # In = np.where(self.Rhos.sum(axis=1) <= t)[0]
+            # Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
+            #
+            # # SAVE NEW STATUS AND RHO/GAMMA TIME SCALES
+            # Status[t] = Status[t-1]
+            #
+            # self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
+            # self.Rhos[En, 1] = t
+            # Status[t, En] = SeirStatus.EXPOSED.value
+            #
+            # # Track at what timestep agents will become symptomatic
+            # self.Incub[En, 0] = 24*np.random.weibull(self.Incub_time_shape, size=len(En))*self.Incub_time_mean
+            # self.Incub[En, 1] = t
+            #
+            # self.Rhos[In, 1] = np.nan
+            # self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
+            # self.Gammas[In, 1] = t
+            # Status[t, In] = SeirStatus.INFECTED.value
+            #
+            # self.Incub[Rn, 1] = np.nan
+            # self.Gammas[Rn, 1] = np.nan
+            # Status[t, Rn] = SeirStatus.RECOVERED.value
+            #
+            # Phases.append(phase)
+            # del En, In, Rn
         self.Status = Status
         self.Phases = Phases
 
@@ -584,7 +584,7 @@ class ModelT(object):
         if not os.path.exists(pathIntervention):
             os.makedirs(pathIntervention)
 
-        np.save(pathIntervention + 'Contacts', self.contacts)
+        np.save(pathIntervention + '/Contacts_' + str(run), self.contacts)
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
         np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
         scipy.sparse.save_npz(pathIntervention + '/Status_'+str(run)+'.npz', Status_sparse)
