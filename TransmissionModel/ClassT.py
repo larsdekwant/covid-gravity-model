@@ -183,8 +183,8 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Groningen')[0]
-        self.InitialI[groundzero] = 1000
+        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
+        self.InitialI[groundzero] = 100
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
@@ -552,7 +552,7 @@ class ModelT(object):
             # Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
             #
             # # SAVE NEW STATUS AND RHO/GAMMA TIME SCALES
-            # Status[t] = Status[t-1]
+            Status[t] = Status[t-1]
             #
             # self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
             # self.Rhos[En, 1] = t
