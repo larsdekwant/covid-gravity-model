@@ -67,7 +67,7 @@ def recalc_positions(self):
 # GENERAL FORCE OF INFECTION CALCULATORS
 # =========================================================================== #
 
-def determine_exposed(self, Stat, day, hour, phase):
+def determine_exposed(self, Stat, t, day, hour, phase):
     s_t = self.sleepfactor[hour]
     Svec = np.zeros(self.N)
     Svec[Stat == 0] = 1
@@ -101,9 +101,12 @@ def determine_exposed(self, Stat, day, hour, phase):
                 beta = self.Betas[m]
             people = np.where(sucs[m] == 1)[0]
             for p in people:
-                group = self.GroupsI[p]
                 loc = np.where(self.PosMat[day, hour, :, p] == 1)[0][0]
-                self.contacts[loc][group] += 1
+                self.contacts_per_agent[t, p, 0] = loc
+                self.contacts_per_agent[t, p, 1] = 1
+                # group = self.GroupsI[p]
+                # loc = np.where(self.PosMat[day, hour, :, p] == 1)[0][0]
+                # self.contacts[loc][group] += 1
                 Lvec[p] = force_of_infection2(self, p, fracs2, m, hour, phase)*beta#*500
     Lvec = Lvec*s_t
     En = np.where(np.random.random(self.N) < Lvec)[0]#S[np.random.random(len(S)) < lds]

@@ -325,7 +325,8 @@ class ModelT(object):
     def initialise(self):
         ''' Initialise transmission model '''
 
-        self.contacts = np.zeros(shape=(380, 11), dtype=int)
+        #self.contacts = np.zeros(shape=(380, 11), dtype=int)
+        self.contacts_per_agent = np.zeros(shape=(self.T, self.N, 2), dtype='uint8')
         
         self.Init = np.zeros(len(self.Homes))
         for i in range(len(self.UniLocs)):
@@ -543,7 +544,7 @@ class ModelT(object):
             # TRANSMISSION: determine exposed, symptomatic, infectious and recovered
             day = np.mod(int(np.floor(t/24)), 7)
             hour = np.mod(t, 24)
-            En = determine_exposed(self, Status[t-1], day, hour, phase)
+            En = determine_exposed(self, Status[t-1], t, day, hour, phase)
             #
             # Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
             # self.symptomatic = Sn
@@ -584,7 +585,8 @@ class ModelT(object):
         if not os.path.exists(pathIntervention):
             os.makedirs(pathIntervention)
 
-        np.save(pathIntervention + '/Contacts_' + str(run), self.contacts)
+        #np.save(pathIntervention + '/Contacts_' + str(run), self.contacts)
+        np.save(pathIntervention + '/Contacts_per_agent_' + str(run), self.contacts_per_agent)
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
         np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
         scipy.sparse.save_npz(pathIntervention + '/Status_'+str(run)+'.npz', Status_sparse)
