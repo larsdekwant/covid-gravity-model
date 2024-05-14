@@ -183,7 +183,7 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
+        groundzero = np.where(self.UniLocs == 'Heerde')[0]
         self.InitialI[groundzero] = 100
 
         # for i in range(len(self.UniLocs)):
@@ -540,10 +540,12 @@ class ModelT(object):
             #     phase, t0 = change_phases(self, phase, IR, t, t0)
             # if self.Intervention == 'border': # this is complementary to regular phase changing
             #     interv_border(self, Status[t-1], t)
-            
+            self.contacts_per_agent[t] = self.contacts_per_agent[t - 1]
+
             # TRANSMISSION: determine exposed, symptomatic, infectious and recovered
             day = np.mod(int(np.floor(t/24)), 7)
             hour = np.mod(t, 24)
+            #En = determine_exposed(self, Status[t-1], t, day, hour, phase)
             En = determine_exposed(self, Status[t-1], t, day, hour, phase)
             #
             # Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
@@ -564,9 +566,9 @@ class ModelT(object):
             # self.Incub[En, 1] = t
             #
             # self.Rhos[In, 1] = np.nan
-            # self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
-            # self.Gammas[In, 1] = t
-            # Status[t, In] = SeirStatus.INFECTED.value
+            #self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
+            #self.Gammas[In, 1] = t
+            #Status[t, En] = SeirStatus.INFECTED.value
             #
             # self.Incub[Rn, 1] = np.nan
             # self.Gammas[Rn, 1] = np.nan

@@ -102,8 +102,10 @@ def determine_exposed(self, Stat, t, day, hour, phase):
             people = np.where(sucs[m] == 1)[0]
             for p in people:
                 loc = np.where(self.PosMat[day, hour, :, p] == 1)[0][0]
-                self.contacts_per_agent[t, p, 0] = loc
-                self.contacts_per_agent[t, p, 1] = 1
+                had_contact = self.contacts_per_agent[t, p, 1]
+                if had_contact == 0:
+                    self.contacts_per_agent[t, p, 0] = loc
+                    self.contacts_per_agent[t, p, 1] = 1
                 # group = self.GroupsI[p]
                 # loc = np.where(self.PosMat[day, hour, :, p] == 1)[0][0]
                 # self.contacts[loc][group] += 1
@@ -111,8 +113,8 @@ def determine_exposed(self, Stat, t, day, hour, phase):
     Lvec = Lvec*s_t
     En = np.where(np.random.random(self.N) < Lvec)[0]#S[np.random.random(len(S)) < lds]
     del Svec, Ivec, Lvec, Ipos, Is, infs, tots, sucs, fracs
-    # return En
-    return []
+    return En
+    #return []
 
 def force_of_infection2(self, p, fracs, m, hour, phase):
     group = self.GroupsI[p]
