@@ -38,7 +38,7 @@ for interv in ['ref']:
         for seed in [5]:
             for latent in [3]:
                 for incub in [3]:
-                    for infect in [3]:
+                    for infect in [0]:
                         params_input = {'savename': 'High',
                                         'intervention': interv,
                                         'Ndays': 7 * 24,
