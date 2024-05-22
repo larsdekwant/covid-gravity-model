@@ -183,8 +183,8 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Groningen')[0]
-        self.InitialI[groundzero] = 100
+        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
+        self.InitialI[groundzero] = 10
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
@@ -322,10 +322,9 @@ class ModelT(object):
             self.Beta_f3 = 0.135#0.09
             self.Beta_f4 = 0.135#0.09
 
-    def initialise(self):
+    def initialise(self, demo_group):
         ''' Initialise transmission model '''
 
-        #self.contacts = np.zeros(shape=(380, 11), dtype=int)
         self.contacts_per_agent = np.zeros(shape=(self.T, self.N, 2), dtype='uint8')
         self.infection_pressure = np.zeros(shape=(self.T, 380))
         
@@ -333,8 +332,8 @@ class ModelT(object):
         for i in range(len(self.UniLocs)):
             amount = self.InitialI[i]
             if amount > 0:
-                wh = np.where(self.Homes == self.UniLocs[i])[0]
-                self.Init[np.random.choice(wh, size=amount, replace=False)] = 2
+                local_agents_demo = np.where((self.Homes == self.UniLocs[i]) & (self.GroupsI == demo_group))[0]
+                self.Init[np.random.choice(local_agents_demo, size=amount, replace=False)] = 2
         wh = np.where(self.Init == 2)[0]
 
         self.Gammas = np.zeros(shape=(self.N, 2))+np.nan
@@ -570,7 +569,7 @@ class ModelT(object):
             # self.Rhos[In, 1] = np.nan
             # self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
             # self.Gammas[In, 1] = t
-            Status[t, In] = SeirStatus.INFECTED.value
+            # Status[t, In] = SeirStatus.INFECTED.value # UNCOMMENT IF WANT INFECTION TO SPREAD
             #
             # self.Incub[Rn, 1] = np.nan
             # self.Gammas[Rn, 1] = np.nan
@@ -581,9 +580,9 @@ class ModelT(object):
         self.Status = Status
         self.Phases = Phases
 
-    def save(self, run):
+    def save(self, run, demo_group):
         ''' Saves '''
-        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l)
+        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l) + '_' + str(demo_group)
         path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
         pathIntervention = os.path.join(path, self.SaveName + '/Seed_' + str(self.Seed) + '/Runs_' + self.Intervention + parameters)
         if not os.path.exists(pathIntervention):
