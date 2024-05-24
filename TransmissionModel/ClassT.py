@@ -183,8 +183,8 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
-        self.InitialI[groundzero] = 10
+        groundzero = np.where(self.UniLocs == 'Eindhoven')[0]
+        self.InitialI[groundzero] = 5
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
@@ -332,8 +332,11 @@ class ModelT(object):
         for i in range(len(self.UniLocs)):
             amount = self.InitialI[i]
             if amount > 0:
-                local_agents_demo = np.where((self.Homes == self.UniLocs[i]) & (self.GroupsI == demo_group))[0]
-                self.Init[np.random.choice(local_agents_demo, size=amount, replace=False)] = 2
+                if demo_group is None:
+                    local_agents = np.where(self.Homes == self.UniLocs[i])[0]
+                else:
+                    local_agents = np.where((self.Homes == self.UniLocs[i]) & (self.GroupsI == demo_group))[0]
+                self.Init[np.random.choice(local_agents, size=amount, replace=False)] = 2
         wh = np.where(self.Init == 2)[0]
 
         self.Gammas = np.zeros(shape=(self.N, 2))+np.nan
@@ -582,7 +585,11 @@ class ModelT(object):
 
     def save(self, run, demo_group):
         ''' Saves '''
-        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l) + '_' + str(demo_group)
+
+        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l)# + '_risk' + str(init_loc)
+        if demo_group is not None:
+            parameters = parameters + '_' + str(demo_group)
+
         path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
         pathIntervention = os.path.join(path, self.SaveName + '/Seed_' + str(self.Seed) + '/Runs_' + self.Intervention + parameters)
         if not os.path.exists(pathIntervention):

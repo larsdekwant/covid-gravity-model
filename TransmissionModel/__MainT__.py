@@ -34,12 +34,13 @@ import scipy.sparse
     # 'brablim'
 
 for interv in ['ref']:
-    for seed in [6]:
+    for seed in [7]:
         for demo_group in range(0, 11):
-            for run in range(0, 10):
+            for run in range(0,10):
                 for latent in [3]:
                     for incub in [3]:
                         for infect in [5]:
+                            #for initial_loc in range(0, 380):
                             params_input = {'savename': 'High',
                                             'intervention': interv,
                                             'Ndays': 7 * 24,
