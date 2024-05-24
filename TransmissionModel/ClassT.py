@@ -183,7 +183,7 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Eindhoven')[0]
+        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
         self.InitialI[groundzero] = 5
 
         # for i in range(len(self.UniLocs)):
@@ -300,7 +300,7 @@ class ModelT(object):
                 if self.UniLocs[m] in ['Amsterdam', 'Rotterdam', 'Utrecht', "'s-Gravenhage"]:
                     self.G4[m] = 1
 
-    def set_parameters(self, latent=4.6, incub=3, infect=5):
+    def set_parameters(self, latent=4.6, incub=100, infect=5):
         ''' Read raw data '''
         print('params: latent=' + str(latent) + ' incubation=' +str(incub) + ' infection=' + str(infect))
 
@@ -549,37 +549,37 @@ class ModelT(object):
             # TRANSMISSION: determine exposed, symptomatic, infectious and recovered
             day = np.mod(int(np.floor(t/24)), 7)
             hour = np.mod(t, 24)
-            #En = determine_exposed(self, Status[t-1], t, day, hour, phase)
-            In = determine_exposed(self, Status[t-1], t, day, hour, phase)
-            #
-            # Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
-            # self.symptomatic = Sn
-            #
-            # In = np.where(self.Rhos.sum(axis=1) <= t)[0]
-            # Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
-            #
-            # # SAVE NEW STATUS AND RHO/GAMMA TIME SCALES
+            En = determine_exposed(self, Status[t-1], t, day, hour, phase)
+            #In = determine_exposed(self, Status[t-1], t, day, hour, phase)
+
+            Sn = np.where(self.Incub.sum(axis=1) <= t)[0]
+            self.symptomatic = Sn
+
+            In = np.where(self.Rhos.sum(axis=1) <= t)[0]
+            Rn = np.where(self.Gammas.sum(axis=1) <= t)[0]
+
+            # SAVE NEW STATUS AND RHO/GAMMA TIME SCALES
             Status[t] = Status[t-1]
-            #
-            # self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
-            # self.Rhos[En, 1] = t
-            # Status[t, En] = SeirStatus.EXPOSED.value
-            #
-            # # Track at what timestep agents will become symptomatic
-            # self.Incub[En, 0] = 24*np.random.weibull(self.Incub_time_shape, size=len(En))*self.Incub_time_mean
-            # self.Incub[En, 1] = t
-            #
-            # self.Rhos[In, 1] = np.nan
-            # self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
-            # self.Gammas[In, 1] = t
-            # Status[t, In] = SeirStatus.INFECTED.value # UNCOMMENT IF WANT INFECTION TO SPREAD
-            #
-            # self.Incub[Rn, 1] = np.nan
-            # self.Gammas[Rn, 1] = np.nan
-            # Status[t, Rn] = SeirStatus.RECOVERED.value
-            #
-            # Phases.append(phase)
-            # del En, In, Rn
+
+            self.Rhos[En, 0] = 24*np.random.weibull(self.EI_k, size=len(En))*self.EI_l
+            self.Rhos[En, 1] = t
+            Status[t, En] = SeirStatus.EXPOSED.value
+
+            # Track at what timestep agents will become symptomatic
+            self.Incub[En, 0] = 24*np.random.weibull(self.Incub_time_shape, size=len(En))*self.Incub_time_mean
+            self.Incub[En, 1] = t
+
+            self.Rhos[In, 1] = np.nan
+            self.Gammas[In, 0] = 24*np.random.weibull(self.IR_k, size=len(In))*self.IR_l
+            self.Gammas[In, 1] = t
+            Status[t, In] = SeirStatus.INFECTED.value # UNCOMMENT IF WANT INFECTION TO SPREAD
+
+            self.Incub[Rn, 1] = np.nan
+            self.Gammas[Rn, 1] = np.nan
+            Status[t, Rn] = SeirStatus.RECOVERED.value
+
+            Phases.append(phase)
+            del En, In, Rn
         self.Status = Status
         self.Phases = Phases
 

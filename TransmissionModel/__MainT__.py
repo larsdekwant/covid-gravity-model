@@ -34,16 +34,16 @@ import scipy.sparse
     # 'brablim'
 
 for interv in ['ref']:
-    for seed in [7]:
+    for seed in [8]:
         for demo_group in range(0, 11):
-            for run in range(0,10):
-                for latent in [3]:
-                    for incub in [3]:
+            for run in range(1, 10):
+                for latent in [4.6]:
+                    for incub in [100]:
                         for infect in [5]:
                             #for initial_loc in range(0, 380):
                             params_input = {'savename': 'High',
                                             'intervention': interv,
-                                            'Ndays': 7 * 24,
+                                            'Ndays': 21 * 24,
                                             'seed': seed}
                             ClassT = ModelT(params_input)
                             ClassT.read_model_data()
