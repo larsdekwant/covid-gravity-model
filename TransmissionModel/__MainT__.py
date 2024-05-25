@@ -36,7 +36,7 @@ import scipy.sparse
 for interv in ['ref']:
     for seed in [8]:
         for demo_group in range(0, 11):
-            for run in range(1, 10):
+            for run in range(10, 20):
                 for latent in [4.6]:
                     for incub in [100]:
                         for infect in [5]:
