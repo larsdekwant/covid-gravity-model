@@ -34,11 +34,11 @@ import scipy.sparse
     # 'brablim'
 
 for interv in ['ref']:
-    for seed in [8]:
+    for seed in [9]:
         for demo_group in range(0, 11):
-            for run in range(0, 3):
+            for run in range(0, 1):
                 for latent in [4.6]:
-                    for incub in [103]:
+                    for incub in [100]:
                         for infect in [5]:
                             #for initial_loc in range(0, 380):
                             params_input = {'savename': 'High',

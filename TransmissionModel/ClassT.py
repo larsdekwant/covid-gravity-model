@@ -183,7 +183,7 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Woerden')[0]
+        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
         self.InitialI[groundzero] = 5
 
         # for i in range(len(self.UniLocs)):
