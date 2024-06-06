@@ -139,7 +139,7 @@ class ModelT(object):
         for i in range(len(self.UniLocs)):
             self.HomePops[i] = len(np.where(self.Homes == self.UniLocs[i])[0])
 
-    def read_empirical_data(self):
+    def read_empirical_data(self, groundzero):
         ''' Read COVID / IC-incident data from RIVM '''
         
         ''' Inf data '''
@@ -183,8 +183,8 @@ class ModelT(object):
         #F1_i = I_rep[Index_f1_adj]
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
-        self.InitialI[groundzero] = 5
+        #groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
+        self.InitialI[groundzero] = 1
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
@@ -583,10 +583,10 @@ class ModelT(object):
         self.Status = Status
         self.Phases = Phases
 
-    def save(self, run, demo_group):
+    def save(self, run, demo_group, init_loc):
         ''' Saves '''
 
-        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l)# + '_risk' + str(init_loc)
+        parameters = '_' + str(self.EI_l) + '_' + str(self.Incub_time_mean) + '_' + str(self.IR_l) + '_risk' + str(init_loc)
         if demo_group is not None:
             parameters = parameters + '_' + str(demo_group)
 
@@ -596,7 +596,7 @@ class ModelT(object):
             os.makedirs(pathIntervention)
 
         #np.save(pathIntervention + '/Contacts_' + str(run), self.contacts)
-        np.save(pathIntervention + '/Contacts_per_agent_' + str(run), self.contacts_per_agent)
+        #np.save(pathIntervention + '/Contacts_per_agent_' + str(run), self.contacts_per_agent)
         np.save(pathIntervention + '/Infection_Pressure_' + str(run), self.infection_pressure)
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
         np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
