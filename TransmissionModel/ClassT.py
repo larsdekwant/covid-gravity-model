@@ -151,7 +151,7 @@ class ModelT(object):
         for i in range(len(self.UniLocs)):
             self.HomePops[i] = len(np.where(self.Homes == self.UniLocs[i])[0])
 
-    def read_empirical_data(self, groundzero):
+    def read_empirical_data(self, groundzero, n_infected=10):
         ''' Read COVID / IC-incident data from RIVM '''
         
         ''' Inf data '''
@@ -196,7 +196,7 @@ class ModelT(object):
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
         #groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
-        self.InitialI[groundzero] = 10
+        self.InitialI[groundzero] = n_infected
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
