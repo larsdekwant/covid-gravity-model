@@ -63,17 +63,17 @@ class ModelM(object):
         #self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
 
         ''' Synthetic mobility data '''
-        #df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
-        #df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
+        df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
+        df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
 
-        # drop first column containing municipality names.
-        #self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
-        #self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
+        #drop first column containing municipality names.
+        self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
+        self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
 
         # Only for randomized gravity model for null model
-        mob_mat = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav.npy'))
-        self.MobMat_freq = mob_mat
-        self.MobMat_inc = mob_mat
+        # mob_mat = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav.npy'))
+        # self.MobMat_freq = mob_mat
+        # self.MobMat_inc = mob_mat
 
         ''' Demographic data (home pop) '''
         DF_Demo = pd.read_csv(self.Path_DemoMat, delimiter=',')
@@ -145,6 +145,33 @@ class ModelM(object):
                 DF['F_'+str(f)] = PeopleMat[:, f]
             self.PeopleDFs.append(DF)
 
+    def create_extra_people_DF(self, npeople):
+        ''' Create day schedules per person '''
+
+        self.extraPeopleDFs = []
+        for N in tqdm(range(self.Ndays)):
+            DF = {}
+            DF = pd.DataFrame(DF)
+            nlocs = len(self.UniLocs)
+            ngroups = len(self.UniGroups)
+            PeopleMat = np.zeros(shape=(npeople*nlocs*ngroups, nlocs))
+            a = 0
+            for r in range(len(self.UniLocs)):
+                for g in range(len(self.UniGroups)):
+                    for person in range(npeople):
+                        DF_p = {}
+                        DF_p['Home'] = [self.UniLocs[r]]
+                        DF_p['Group'] = [self.UniGroups[g]]
+                        PeopleMat[a] = draw_fractions(self, r, g)
+                        a += 1
+                        if r == 0 and g == 0 and person == 0:
+                            DF = pd.DataFrame(DF_p)
+                        else:
+                            DF = pd.concat([DF, pd.DataFrame(DF_p)], ignore_index=True)
+            for f in range(len(self.UniLocs)):
+                DF['F_' + str(f)] = PeopleMat[:, f]
+            self.extraPeopleDFs.append(DF)
+
     def position_people(self):
         ''' Determine actual positioning of people over time '''
 
@@ -175,6 +202,36 @@ class ModelM(object):
             Positions = np.array(allpos)
             self.Positions_all.append(Positions)
 
+    def position_extraPeople(self):
+        ''' Determine actual positioning of people over time '''
+
+        self.Positions_extra = []
+        for N in tqdm(range(self.Ndays)):
+            PeopleDF = self.extraPeopleDFs[N]
+            allpos = []
+            hourpos = np.zeros(shape=(len(PeopleDF), 24*1))-10
+            for p in range(len(PeopleDF)):
+                keys = np.array(PeopleDF[PeopleDF.index == p])[0]
+                r = keys[0]
+                r = np.where(np.array(self.UniLocs) == r)[0][0]
+                fs = np.array(keys)[2:].astype(float)
+                hs = np.round(fs*24*1, 0).astype(int)
+                hs = hs / np.sum(hs) * 24 * 1
+                hs = hs.astype(int)
+                a = np.arange(len(self.UniLocs))
+                np.random.shuffle(a)
+                hourpos[p, :int(np.round(hs[r]/2))] = r
+                d = int(np.round(hs[r]/2))
+                hs[r] = 0
+                for i in a:
+                    dnew = d+hs[i]
+                    hourpos[p, d:dnew] = i
+                    d = dnew
+                hourpos[p, dnew:] = r
+            allpos = allpos + list(hourpos.T)
+            Positions = np.array(allpos)
+            self.Positions_extra.append(Positions)
+
     def count_people(self):
         ''' Counts total numbers of people per R and G '''
 
@@ -200,7 +257,10 @@ class ModelM(object):
         if not os.path.exists(pathSeed):
             os.makedirs(pathSeed)
 
-        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl')
+        #pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl')
         pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl')
         pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
-        np.save(path+'Positions', self.Positions_all)
+        #np.save(path + 'Positions', self.Positions_all)
+
+        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl')
+        np.save(path + 'ExtraPositions', self.Positions_extra)

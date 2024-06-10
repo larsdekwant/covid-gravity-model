@@ -87,7 +87,7 @@ class ModelT(object):
         print('# ------ Amount days:   '+str(int(self.T/24)))
         print('# ---------------------------------------------------------- #')
 
-    def read_model_data(self):
+    def read_model_data(self, loc, group):
         ''' Read raw data '''
 
         path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
@@ -95,12 +95,24 @@ class ModelT(object):
 
         self.PeopleDF = pd.read_pickle(pathSeed+'PeopleDF.pkl')
         self.Positions = np.load(path+'Positions.npy')
+
         self.Positions0 = np.load(path+'Positions.npy').astype(int)
         self.UniLocs = np.array(pd.read_pickle(path+'Gemeenten.pkl')).T[0]
         self.UniIDs = np.array(pd.read_pickle(path+'GemeentenID.pkl')).T[0]
+
+        # Add extra agents to the municipality that will be used as initialisation
+        self.ExtraPeopleDF = pd.read_pickle(pathSeed + 'ExtraPeopleDF.pkl')
+        self.ExtraPositions = np.load(path + 'ExtraPositions.npy')
+
+        self.UniGroups = np.unique(np.array(self.ExtraPeopleDF.Group))
+        extra_agents = self.ExtraPeopleDF.loc[(self.ExtraPeopleDF['Home'] == self.UniLocs[loc]) & (self.ExtraPeopleDF['Group'] == self.UniGroups[group])]
+        extra_pos = self.ExtraPositions[:, :, extra_agents.index]
+
+        self.PeopleDF = pd.concat([self.PeopleDF, extra_agents], ignore_index=True) # Add agent info
+        self.Positions = np.append(self.Positions, extra_pos, axis=2)               # Add agent positions
+
         self.Homes = np.array(self.PeopleDF.Home)
         self.Groups = np.array(self.PeopleDF.Group)
-        self.UniGroups = np.unique(self.Groups)
         self.GroupsI = np.zeros(shape=len(self.Groups))
         for i in range(len(self.UniGroups)):
             self.GroupsI[self.Groups == self.UniGroups[i]] = i
@@ -184,7 +196,7 @@ class ModelT(object):
 
         self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
         #groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
-        self.InitialI[groundzero] = 1
+        self.InitialI[groundzero] = 10
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
