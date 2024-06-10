@@ -41,7 +41,7 @@ incub = 100
 infect = 5
 
 for interv in ['ref']:
-    for seed in [11]:
+    for seed in [0]:
         for demo_group in [3]:
             for run in range(0, 10):
                 params_input = {'savename': 'High',
