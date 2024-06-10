@@ -7,13 +7,9 @@
 # ----------------------------------------------------------------- #
 
 import configparser
-import sys
-import scipy.io
-import networkx as nx
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
-from scipy.sparse import csr_matrix
 import warnings
 import os
 from Functions import draw_fractions, translate_polymod, new_mixmat

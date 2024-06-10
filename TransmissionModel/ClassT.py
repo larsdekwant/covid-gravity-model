@@ -1,3 +1,4 @@
+# coding=utf-8
 # ----------------------------------------------------------------- #
 # About script
 # ----------------------------------------------------------------- #
@@ -7,11 +8,8 @@
 # ----------------------------------------------------------------- #
 
 import configparser
-import sys
 import scipy.io
 
-import matplotlib.pyplot as plt
-import networkx as nx
 from tqdm import tqdm
 import pandas as pd
 import numpy as np

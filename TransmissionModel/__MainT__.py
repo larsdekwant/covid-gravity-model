@@ -6,14 +6,8 @@
 # Preambule
 # ----------------------------------------------------------------- #
 
-import numpy as np
 import sys
 from ClassT import ModelT
-from tqdm import tqdm
-import pandas as pd
-import scipy.io
-import matplotlib.pyplot as plt
-import scipy.sparse
 
 # ----------------------------------------------------------------- #
 # Initialize Class

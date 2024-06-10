@@ -6,13 +6,7 @@
 # Preambule
 # ----------------------------------------------------------------- #
 
-import numpy as np
 from ClassM import ModelM
-from tqdm import tqdm
-import pandas as pd
-import scipy.io
-import matplotlib.pyplot as plt
-from Functions import draw_fractions
 
 # ----------------------------------------------------------------- #
 # Initialize Class
