@@ -253,10 +253,10 @@ class ModelM(object):
         if not os.path.exists(pathSeed):
             os.makedirs(pathSeed)
 
-        #pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl')
-        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl')
-        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
-        #np.save(path + 'Positions', self.Positions_all)
+        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl', protocol=4)
+        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl', protocol=4)
+        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl', protocol=4)
+        np.save(path + 'Positions', self.Positions_all)
 
-        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl')
+        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
         np.save(path + 'ExtraPositions', self.Positions_extra)

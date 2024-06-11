@@ -2,9 +2,7 @@
 # Additional functions for the Transmission class
 # =========================================================================== #
 
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import sys
 from tqdm import tqdm
 import scipy.sparse

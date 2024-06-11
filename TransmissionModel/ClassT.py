@@ -611,7 +611,7 @@ class ModelT(object):
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
         np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
         scipy.sparse.save_npz(pathIntervention + '/Status_'+str(run)+'.npz', Status_sparse)
-        pd.DataFrame(self.Phases).to_pickle(pathIntervention + '/Phases_'+str(run)+'.pkl')
+        pd.DataFrame(self.Phases).to_pickle(pathIntervention + '/Phases_'+str(run)+'.pkl', protocol=4)
         if self.Intervention == 'border':
             pd.DataFrame(self.TimeClosures).to_pickle(pathIntervention + '/TimeClosures_'+str(run)+'.pkl')
         if self.Intervention == 'local':
