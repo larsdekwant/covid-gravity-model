@@ -59,17 +59,17 @@ class ModelM(object):
         #self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
 
         ''' Synthetic mobility data '''
-        df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
-        df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
+        # df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
+        # df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
 
-        #drop first column containing municipality names.
-        self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
-        self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
+        # #drop first column containing municipality names.
+        # self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
+        # self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
 
         # Only for randomized gravity model for null model
-        # mob_mat = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav.npy'))
-        # self.MobMat_freq = mob_mat
-        # self.MobMat_inc = mob_mat
+        mob_mat = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav.npy'))
+        self.MobMat_freq = mob_mat
+        self.MobMat_inc = mob_mat
 
         ''' Demographic data (home pop) '''
         DF_Demo = pd.read_csv(self.Path_DemoMat, delimiter=',')
@@ -253,10 +253,10 @@ class ModelM(object):
         if not os.path.exists(pathSeed):
             os.makedirs(pathSeed)
 
-        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl', protocol=4)
-        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl', protocol=4)
-        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl', protocol=4)
+        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl')
+        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl')
+        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
         np.save(path + 'Positions', self.Positions_all)
 
-        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
-        np.save(path + 'ExtraPositions', self.Positions_extra)
+        #pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
+        #np.save(path + 'ExtraPositions', self.Positions_extra)
