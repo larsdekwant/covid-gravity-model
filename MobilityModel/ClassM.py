@@ -67,9 +67,8 @@ class ModelM(object):
         # self.MobMat_inc = df_mobInc[df_mobInc.columns[1:]].to_numpy()
 
         # Only for randomized gravity model for null model
-        mob_mat = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav.npy'))
-        self.MobMat_freq = mob_mat
-        self.MobMat_inc = mob_mat
+        self.MobMat_freq = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav_freq.npy'))
+        self.MobMat_inc = np.load(os.path.join(os.getcwd(),  '../Data/Randomized_mob_grav_inc.npy'))
 
         ''' Demographic data (home pop) '''
         DF_Demo = pd.read_csv(self.Path_DemoMat, delimiter=',')
@@ -258,5 +257,5 @@ class ModelM(object):
         pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
         np.save(path + 'Positions', self.Positions_all)
 
-        #pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
-        #np.save(path + 'ExtraPositions', self.Positions_extra)
+        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
+        np.save(path + 'ExtraPositions', self.Positions_extra)

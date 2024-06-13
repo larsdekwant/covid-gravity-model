@@ -133,3 +133,4 @@ dmypy.json
 
 # project data files
 Data/Model_V1/
+Data/results/
