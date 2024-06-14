@@ -59,8 +59,8 @@ class ModelM(object):
         #self.RawData = pd.read_csv(self.Path_RawDataDay, delimiter=';')
 
         ''' Synthetic mobility data '''
-        df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',')
-        df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',')
+        df_mobFreq = pd.read_csv(self.Path_RawDataDayFreq, delimiter=',').fillna(value=0)
+        df_mobInc = pd.read_csv(self.Path_RawDataDayInc, delimiter=',').fillna(value=0)
 
         #drop first column containing municipality names.
         self.MobMat_freq = df_mobFreq[df_mobFreq.columns[1:]].to_numpy()
@@ -257,5 +257,5 @@ class ModelM(object):
         pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
         np.save(path + 'Positions', self.Positions_all)
 
-        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
+        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl')
         np.save(path + 'ExtraPositions', self.Positions_extra)

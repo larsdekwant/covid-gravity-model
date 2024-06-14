@@ -18,10 +18,10 @@ params_input = {'savename': 'High',
 ClassM = ModelM(params_input)
 ClassM.read_data()
 #ClassM.mobility_matrix()
-for mc in [8]:
+for mc in [0]:
     ClassM.create_people_DF()
     ClassM.position_people()
-    ClassM.create_extra_people_DF(10)
+    ClassM.create_extra_people_DF(5)
     ClassM.position_extraPeople()
     #ClassM.count_people()
     ClassM.save(mc) 

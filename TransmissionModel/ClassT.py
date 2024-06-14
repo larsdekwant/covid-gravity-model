@@ -85,29 +85,44 @@ class ModelT(object):
         print('# ------ Amount days:   '+str(int(self.T/24)))
         print('# ---------------------------------------------------------- #')
 
-    def read_model_data(self, loc, group):
+    def read_model_data(self, loc, group, n_infected):
         ''' Read raw data '''
 
         path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
-        pathSeed = os.path.join(path, self.SaveName + '/' + 'Seed_' + str(self.Seed) + '/')
+        path_seed = os.path.join(path, self.SaveName + '/' + 'Seed_' + str(self.Seed) + '/')
 
-        self.PeopleDF = pd.read_pickle(pathSeed+'PeopleDF.pkl')
+        self.PeopleDF = pd.read_pickle(path_seed+'PeopleDF.pkl')
         self.Positions = np.load(path+'Positions.npy')
 
         self.Positions0 = np.load(path+'Positions.npy').astype(int)
         self.UniLocs = np.array(pd.read_pickle(path+'Gemeenten.pkl')).T[0]
         self.UniIDs = np.array(pd.read_pickle(path+'GemeentenID.pkl')).T[0]
+        self.UniGroups = np.unique(np.array(self.PeopleDF.Group))
 
-        # Add extra agents to the municipality that will be used as initialisation
-        self.ExtraPeopleDF = pd.read_pickle(pathSeed + 'ExtraPeopleDF.pkl')
-        self.ExtraPositions = np.load(path + 'ExtraPositions.npy')
+        # If there are too few agents of the required demographic group in the municipality, add them.
+        available_agents = self.PeopleDF.loc[
+            (self.PeopleDF['Home'] == self.UniLocs[loc]) & (self.PeopleDF['Group'] == self.UniGroups[group])]
+        n_available_agents = available_agents.shape[0]
 
-        self.UniGroups = np.unique(np.array(self.ExtraPeopleDF.Group))
-        extra_agents = self.ExtraPeopleDF.loc[(self.ExtraPeopleDF['Home'] == self.UniLocs[loc]) & (self.ExtraPeopleDF['Group'] == self.UniGroups[group])]
-        extra_pos = self.ExtraPositions[:, :, extra_agents.index]
+        if n_available_agents < n_infected:
+            n_to_add = n_infected - n_available_agents
 
-        self.PeopleDF = pd.concat([self.PeopleDF, extra_agents], ignore_index=True) # Add agent info
-        self.Positions = np.append(self.Positions, extra_pos, axis=2)               # Add agent positions
+            extra_PeopleDF = pd.read_pickle(path_seed + 'ExtraPeopleDF.pkl')
+            extra_Positions = np.load(path + 'ExtraPositions.npy')
+
+            extra_agents = extra_PeopleDF.loc[(extra_PeopleDF['Home'] == self.UniLocs[loc]) & (
+                    extra_PeopleDF['Group'] == self.UniGroups[group])][:n_to_add]
+            extra_pos = extra_Positions[:, :, extra_agents.index]
+
+            # Add agent info and positions to the main datastructures
+            self.PeopleDF = pd.concat([self.PeopleDF, extra_agents], ignore_index=True)
+            self.Positions = np.append(self.Positions, extra_pos, axis=2)
+            print('Added ' + str(n_to_add) + ' extra agents to ' + self.UniLocs[loc])
+
+        # Set initial infection to the right municipality and amount
+        self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
+        self.InitialI[loc] = n_infected
+        print('Initial infected at t=0: ' + str(np.sum(self.InitialI)))
 
         self.Homes = np.array(self.PeopleDF.Home)
         self.Groups = np.array(self.PeopleDF.Group)
@@ -149,7 +164,7 @@ class ModelT(object):
         for i in range(len(self.UniLocs)):
             self.HomePops[i] = len(np.where(self.Homes == self.UniLocs[i])[0])
 
-    def read_empirical_data(self, groundzero, n_infected=10):
+    def read_empirical_data(self):
         ''' Read COVID / IC-incident data from RIVM '''
         
         ''' Inf data '''
@@ -192,9 +207,10 @@ class ModelT(object):
         #F1_loc = Loc[Index_f1_adj]
         #F1_i = I_rep[Index_f1_adj]
 
-        self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
-        #groundzero = np.where(self.UniLocs == 'Amsterdam')[0]
-        self.InitialI[groundzero] = n_infected
+
+        # self.InitialI = np.zeros(len(self.UniLocs), dtype=int)
+        # loc = np.where(self.UniLocs == 'Amsterdam')[0]
+        # self.InitialI[loc] = n_infected
 
         # for i in range(len(self.UniLocs)):
         #     l = self.UniLocs[i]
@@ -235,7 +251,7 @@ class ModelT(object):
         #         elif l in ['Haaren', 'Oisterwijk']:
         #             self.InitialI[i] = np.nansum(F1_i[F1_loc == 'Oisterwijk'])/2
         # self.InitialI = np.round(self.InitialI/self.Div).astype(int)
-        print('Initial infected at t=0: ' + str(np.sum(self.InitialI)))
+        # print('Initial infected at t=0: ' + str(np.sum(self.InitialI)))
 
         ''' Mixing data from PIENTER '''
         # no behavioral changes
