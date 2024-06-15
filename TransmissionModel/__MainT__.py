@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------- #
 
 import sys
+#import resource
 from ClassT import ModelT
 
 # ----------------------------------------------------------------- #
@@ -29,7 +30,7 @@ from ClassT import ModelT
     # 'brablim'
 
 # some parameters
-initial_loc = int(sys.argv[1])
+initial_loc = 17 #int(sys.argv[1])
 latent = 4.6
 incub = 100
 infect = 5
@@ -37,8 +38,8 @@ n_initial_infect = 5
 
 for interv in ['ref']:
     for seed in [0]:
-        for demo_group in [3]:
-            for run in range(0, 20):
+        for demo_group in range(0, 11):
+            for run in range(0, 3):
                 params_input = {'savename': 'High',
                                 'intervention': interv,
                                 'Ndays': 21 * 24,

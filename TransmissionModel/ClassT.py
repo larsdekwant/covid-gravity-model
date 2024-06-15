@@ -91,6 +91,11 @@ class ModelT(object):
         path = os.path.normpath(os.path.join(os.getcwd(), self.Path_Data)) + '/'
         path_seed = os.path.join(path, self.SaveName + '/' + 'Seed_' + str(self.Seed) + '/')
 
+        self.groundzero_loc = loc
+        self.groundzero_group = group
+        self.groundzero_n_infected = n_infected
+        self.n_extra_agents = 0
+
         self.PeopleDF = pd.read_pickle(path_seed+'PeopleDF.pkl')
         self.Positions = np.load(path+'Positions.npy')
 
@@ -117,6 +122,8 @@ class ModelT(object):
             # Add agent info and positions to the main datastructures
             self.PeopleDF = pd.concat([self.PeopleDF, extra_agents], ignore_index=True)
             self.Positions = np.append(self.Positions, extra_pos, axis=2)
+
+            self.n_extra_agents = n_to_add
             print('Added ' + str(n_to_add) + ' extra agents to ' + self.UniLocs[loc])
 
         # Set initial infection to the right municipality and amount
@@ -625,6 +632,8 @@ class ModelT(object):
         #np.save(pathIntervention + '/Contacts_per_agent_' + str(run), self.contacts_per_agent)
         np.save(pathIntervention + '/Infection_Pressure_' + str(run), self.infection_pressure)
         Status_sparse = scipy.sparse.csr_matrix(self.Status)
+        np.savetxt(pathIntervention + '/Risk_metadata_' + str(run),
+                   np.array([self.UniLocs[self.groundzero_loc], self.UniGroups[self.groundzero_group], str(self.groundzero_n_infected), str(self.n_extra_agents)]), fmt="%s")
         np.savetxt(pathIntervention + '/Timestep_' + str(run), np.array([self.Timestep12March]))
         scipy.sparse.save_npz(pathIntervention + '/Status_'+str(run)+'.npz', Status_sparse)
         pd.DataFrame(self.Phases).to_pickle(pathIntervention + '/Phases_'+str(run)+'.pkl')

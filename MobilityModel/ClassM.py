@@ -252,10 +252,12 @@ class ModelM(object):
         if not os.path.exists(pathSeed):
             os.makedirs(pathSeed)
 
-        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl')
-        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl')
-        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl')
+        # Pickle files need to be stored with PROTOCOL 4 if you want to use this data on the gemini cluster
+        # Because PROTOCOL 5 is for python 3.8+, and the gemini cluster runs python 3.6.8
+        pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl', protocol=4)
+        pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl', protocol=4)
+        pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl', protocol=4)
         np.save(path + 'Positions', self.Positions_all)
 
-        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl')
+        pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
         np.save(path + 'ExtraPositions', self.Positions_extra)
