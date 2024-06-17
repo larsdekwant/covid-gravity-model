@@ -257,7 +257,7 @@ class ModelM(object):
         pd.DataFrame(self.PeopleDFs[0]).to_pickle(pathSeed + 'PeopleDF.pkl', protocol=4)
         pd.DataFrame(self.UniLocs).to_pickle(path + 'Gemeenten.pkl', protocol=4)
         pd.DataFrame(self.UniIDs).to_pickle(path + 'GemeentenID.pkl', protocol=4)
-        np.save(path + 'Positions', self.Positions_all)
+        np.save(pathSeed + 'Positions', self.Positions_all)
 
         pd.DataFrame(self.extraPeopleDFs[0]).to_pickle(pathSeed + 'ExtraPeopleDF.pkl', protocol=4)
-        np.save(path + 'ExtraPositions', self.Positions_extra)
+        np.save(pathSeed + 'ExtraPositions', self.Positions_extra)

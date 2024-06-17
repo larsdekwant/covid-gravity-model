@@ -97,9 +97,9 @@ class ModelT(object):
         self.n_extra_agents = 0
 
         self.PeopleDF = pd.read_pickle(path_seed+'PeopleDF.pkl')
-        self.Positions = np.load(path+'Positions.npy')
+        self.Positions = np.load(path_seed+'Positions.npy')
 
-        self.Positions0 = np.load(path+'Positions.npy').astype(int)
+        self.Positions0 = np.load(path_seed+'Positions.npy').astype(int)
         self.UniLocs = np.array(pd.read_pickle(path+'Gemeenten.pkl')).T[0]
         self.UniIDs = np.array(pd.read_pickle(path+'GemeentenID.pkl')).T[0]
         self.UniGroups = np.unique(np.array(self.PeopleDF.Group))
@@ -113,7 +113,7 @@ class ModelT(object):
             n_to_add = n_infected - n_available_agents
 
             extra_PeopleDF = pd.read_pickle(path_seed + 'ExtraPeopleDF.pkl')
-            extra_Positions = np.load(path + 'ExtraPositions.npy')
+            extra_Positions = np.load(path_seed + 'ExtraPositions.npy')
 
             extra_agents = extra_PeopleDF.loc[(extra_PeopleDF['Home'] == self.UniLocs[loc]) & (
                     extra_PeopleDF['Group'] == self.UniGroups[group])][:n_to_add]
@@ -341,7 +341,7 @@ class ModelT(object):
         self.T = self.T                 # Amount of hours simulated
         self.Incub_time_mean = incub
         self.Incub_time_shape = 20
-        self.self_isolate_perc = 0.8
+        self.self_isolate_perc = 0  # percentage of people self-isolating when they show symptoms [0-1]
         self.EI_l = latent # 4.6                 # was 5.5     play around with this variable
         self.EI_k = 20
         self.IR_l = infect # 5                # was 10

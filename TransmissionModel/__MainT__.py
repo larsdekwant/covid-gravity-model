@@ -37,8 +37,8 @@ infect = 5
 n_initial_infect = 5
 
 for interv in ['ref']:
-    for seed in [0]:
-        for demo_group in range(0, 11):
+    for seed in [11]:
+        for demo_group in range(0,11):
             for run in range(0, 3):
                 params_input = {'savename': 'High',
                                 'intervention': interv,
