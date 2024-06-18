@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------- #
 
 import sys
-#import resource
+import resource
 from ClassT import ModelT
 
 # ----------------------------------------------------------------- #
@@ -30,16 +30,16 @@ from ClassT import ModelT
     # 'brablim'
 
 # some parameters
-initial_loc = 17 #int(sys.argv[1])
+initial_loc = int(sys.argv[1])
 latent = 4.6
 incub = 100
 infect = 5
 n_initial_infect = 5
 
 for interv in ['ref']:
-    for seed in [11]:
-        for demo_group in range(0,11):
-            for run in range(0, 3):
+    for seed in range(0, 20):
+        for demo_group in [3]:
+            for run in [0]:
                 params_input = {'savename': 'High',
                                 'intervention': interv,
                                 'Ndays': 21 * 24,
@@ -53,4 +53,4 @@ for interv in ['ref']:
                 ClassT.save(run, demo_group, initial_loc)
                 del ClassT
 
-#print('Max memory usage (in KB): ' + str(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
+print('Max memory usage (in KB): ' + str(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
