@@ -26,11 +26,7 @@ echo "Completed models, copying results to /nethome/solisid..."
 
 cd ..
 cd Data
-rsync -r --info=progress2 ./Model_V1/Data/High /nethome/6958680/results/3
-
-echo "Cleaning up scratch files..."
-cd /scratch/6958680
-rm -rf src
+rsync -r --info=progress2 ./Model_V1/Data/High /nethome/6958680/results/1
 
 echo "Done..."
 #end of job

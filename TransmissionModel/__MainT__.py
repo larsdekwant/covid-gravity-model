@@ -30,16 +30,16 @@ from ClassT import ModelT
     # 'brablim'
 
 # some parameters
-initial_loc = 329 #int(sys.argv[1])
+initial_loc = int(sys.argv[1])
 latent = 4.6
 incub = 100
 infect = 5
 n_initial_infect = 5
 
 for interv in ['ref']:
-    for seed in [14]:
+    for seed in range(0, 5):
         for demo_group in [3]:
-            for run in [0,1,2]:
+            for run in range(0, 5):
                 params_input = {'savename': 'High',
                                 'intervention': interv,
                                 'Ndays': 21 * 24,
