@@ -11,7 +11,6 @@ import sys
 import scipy.io
 
 import matplotlib.pyplot as plt
-import networkx as nx
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
@@ -306,7 +305,7 @@ class ModelT(object):
         self.T = self.T                 # Amount of hours simulated
         self.Incub_time_mean = incub
         self.Incub_time_shape = 20
-        self.self_isolate_perc = 0.8
+        self.self_isolate_perc = 0
         self.EI_l = latent # 4.6                 # was 5.5     play around with this variable
         self.EI_k = 20
         self.IR_l = infect # 5                # was 10
@@ -515,26 +514,26 @@ class ModelT(object):
             # NEW IR? <--- let op
             # IR = len(np.where(Status[t-1] >= 2)[0])
             
-            # # INTERVENTIONS
-            # if self.Intervention == 'local':
-            #     if self.Predated == 0:
-            #         IR = len(np.where(Status[t-1] >= 2)[0])
-            #         national_datesetting(self, t, IR)
-            #     if self.Predated == 1:
-            #         phase, t0 = interv_local(self, Status[t-1], t, phase, t0)
-            # elif self.Intervention == 'brablim':
-            #     phase, t0 = change_phases_brablim(self, phase, IR, t, t0)
-            #     self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
-            #     self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
-            # elif self.Intervention == 'G4':
-            #     phase, t0 = change_phases_G4(self, phase, IR, t, t0)
-            #     self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
-            #     self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
-            # else:
-            #     IR = len(np.where(Status[t-1] >= 2)[0])
-            #     phase, t0 = change_phases(self, phase, IR, t, t0)
-            # if self.Intervention == 'border': # this is complementary to regular phase changing
-            #     interv_border(self, Status[t-1], t)
+            # INTERVENTIONS
+            if self.Intervention == 'local':
+                if self.Predated == 0:
+                    IR = len(np.where(Status[t-1] >= 2)[0])
+                    national_datesetting(self, t, IR)
+                if self.Predated == 1:
+                    phase, t0 = interv_local(self, Status[t-1], t, phase, t0)
+            elif self.Intervention == 'brablim':
+                phase, t0 = change_phases_brablim(self, phase, IR, t, t0)
+                self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
+                self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
+            elif self.Intervention == 'G4':
+                phase, t0 = change_phases_G4(self, phase, IR, t, t0)
+                self.Homeworkers = [item for sublist in self.Homeworkers_m for item in sublist]
+                self.Homeschoolers = [item for sublist in self.Homeschoolers_m for item in sublist]
+            else:
+                IR = len(np.where(Status[t-1] >= 2)[0])
+                phase, t0 = change_phases(self, phase, IR, t, t0)
+            if self.Intervention == 'border': # this is complementary to regular phase changing
+                interv_border(self, Status[t-1], t)
             
             # TRANSMISSION: determine exposed, symptomatic, infectious and recovered
             day = np.mod(int(np.floor(t/24)), 7)

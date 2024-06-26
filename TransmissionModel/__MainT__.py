@@ -6,13 +6,7 @@
 # Preambule
 # ----------------------------------------------------------------- #
 
-import numpy as np
 from ClassT import ModelT
-from tqdm import tqdm
-import pandas as pd
-import scipy.io
-import matplotlib.pyplot as plt
-import scipy.sparse
 
 # ----------------------------------------------------------------- #
 # Initialize Class
@@ -35,13 +29,13 @@ import scipy.sparse
 
 for interv in ['ref']:
     for run in [0]:
-        for seed in [3]:
-            for latent in [3,6,9]:
-                for incub in [3,6,9]:
-                    for infect in [5]:
+        for seed in [1]:
+            for latent in [5.5]:
+                for incub in [3]:
+                    for infect in [10]:
                         params_input = {'savename': 'High',
                                         'intervention': interv,
-                                        'Ndays': 28 * 24,
+                                        'Ndays': 120 * 24,
                                         'seed': seed}
                         ClassT = ModelT(params_input)
                         ClassT.read_model_data()
