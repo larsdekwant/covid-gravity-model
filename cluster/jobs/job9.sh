@@ -26,7 +26,7 @@ echo "Completed models, copying results to /nethome/solisid..."
 
 cd ..
 cd Data
-rsync -r --info=progress2 ./Model_V1/Data/High /nethome/6958680/results/1
+rsync -r --info=progress2 ./Model_V1/Data/High /nethome/6958680/results/5
 
 echo "Done..."
 #end of job
