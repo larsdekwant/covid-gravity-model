@@ -30,9 +30,9 @@ from ClassT import ModelT
 for interv in ['ref']:
     for run in [0]:
         for seed in [1]:
-            for latent in [5.5]:
+            for latent in [4.6]:
                 for incub in [3]:
-                    for infect in [10]:
+                    for infect in [5]:
                         params_input = {'savename': 'High',
                                         'intervention': interv,
                                         'Ndays': 120 * 24,
