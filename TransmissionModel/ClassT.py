@@ -307,7 +307,7 @@ class ModelT(object):
         self.Incub_time_shape = 20
         self.self_isolate_perc = 0
         self.EI_l = latent # 4.6                 # was 5.5     play around with this variable
-        self.EI_k = 3      # was 20
+        self.EI_k = 20     # was 20
         self.IR_l = infect # 5                # was 10
         self.IR_k = 1.0                 # was 0.8
         self.Beta_f1 = 0.135#0.09

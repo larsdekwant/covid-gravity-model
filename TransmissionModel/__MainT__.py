@@ -27,7 +27,7 @@ from ClassT import ModelT
     # 'local'
     # 'brablim'
 
-for interv in ['ref']:
+for interv in ['behavior']:
     for run in [0]:
         for seed in [1]:
             for latent in [4.6]:
