@@ -7,5 +7,5 @@ All data required to run the model is included in the Data folder.
 The data used to create the results can be requested from the authors, or generated yourself by running the model.
 
 # Running the model
-The model is made up out of two parts. The first part is run by running the __MainM__.py script in the MobilityModel folder, while the second part is run by running the __MainT__.py script in the TransmissionModel folder.
+The model is made up out of two parts. The first part is run by running the \_\_MainM\_\_.py script in the MobilityModel folder, while the second part is run by running the \_\_MainT\_\_.py script in the TransmissionModel folder.
 To run this code on the gemini cluster, the Data and TransmissionModel folder must be uploaded to the server (through for example a `scp` command). After that the scripts provided in the /cluster folder can be used. The `generate-jobs.ipynb` python notebook can be used to generate the job scripts to be run on the cluster. The `queue-jobs.sh` script should be run on the cluster to queue all job files into the `qsub` system on the cluster. Due to the heavy memory load of the model sometimes a job fails to complete fully (seemingly only for jobs that do not get queue'd onto the all.q@science-bs36.soliscom.uu queue), and as a result, some output files may be missing and those jobs have to be rerun.
