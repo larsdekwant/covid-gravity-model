@@ -133,3 +133,6 @@ dmypy.json
 
 # project data files
 Data/Model_V1/
+
+# big data files
+Data/CBS/
