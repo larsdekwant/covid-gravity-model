@@ -8,3 +8,5 @@ Data/Model_V1/* filter=lfs diff=lfs merge=lfs -text
 Data/CBS/* filter=lfs diff=lfs merge=lfs -text
 data/* filter=lfs diff=lfs merge=lfs -text
 Data/* filter=lfs diff=lfs merge=lfs -text
+Data/*.npy filter=lfs diff=lfs merge=lfs -text
+Data/CBS/*.npy filter=lfs diff=lfs merge=lfs -text
